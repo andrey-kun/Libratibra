@@ -14,6 +14,6 @@ class Index extends \Core\Controller
 {
     public function indexAction()
     {
-        View::renderTemplate('base.html', []);
+        View::renderTemplate('index.html', []);
     }
 }
