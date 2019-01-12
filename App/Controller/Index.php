@@ -8,12 +8,15 @@
 
 namespace App\Controller;
 
+use App\Config;
 use Core\View;
 
 class Index extends \Core\Controller
 {
     public function indexAction()
     {
-        View::renderTemplate('index.html', []);
+        View::renderTemplate('index.html', [
+            'projectName' => Config::PROJECT_NAME
+        ]);
     }
 }
