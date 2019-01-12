@@ -1,9 +1,4 @@
 #titlelogo {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
     text-align: center;
     color: white;
     font: bold 96pt 'IM FELL French Canon';
