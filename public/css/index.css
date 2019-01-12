@@ -4,3 +4,18 @@
     font: bold 96pt 'IM FELL French Canon';
     text-shadow: 2pt 2pt 4pt black;
 }
+
+
+.searchField {
+    font-size: 24pt;
+}
+
+.searchField input[type="search"] {
+    width: 70%;
+}
+
+div.searchField {
+    text-align: center;
+    font: bold 96pt 'IM FELL French Canon';
+    width: 100%;
+}
