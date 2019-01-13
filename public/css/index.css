@@ -19,3 +19,54 @@ div.searchField {
     font: bold 96pt 'IM FELL French Canon';
     width: 100%;
 }
+
+
+div.booklist {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 80%;
+}
+
+.booklist table {
+    background: white;
+    border: 4pt solid white;
+    border-radius: 8pt;
+    width: 100%;
+}
+
+.booklist th {
+    background: #d2a06b;
+    padding: 4pt 16pt;
+}
+
+.booklist td {
+    border: solid white;
+    border-width: 8pt 0pt;
+    margin: 140pt;
+}
+
+
+.ratingAwesome {
+    color: #0a0;
+}
+
+.ratingGood {
+    color: #5a0;
+}
+
+.ratingAverage {
+    color: #aa0;
+}
+
+.ratingPoor {
+    color: #a50;
+}
+
+.ratingHorrible {
+    color: #a00;
+}
+
+.panelSort {
+    float: right;
+}
