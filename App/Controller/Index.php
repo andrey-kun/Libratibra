@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 use App\Config;
+use App\Model\Book;
 use Core\View;
 
 class Index extends \Core\Controller
@@ -16,7 +17,8 @@ class Index extends \Core\Controller
     public function indexAction()
     {
         View::renderTemplate('index.html', [
-            'projectName' => Config::PROJECT_NAME
+            'projectName' => Config::PROJECT_NAME,
+            'books' => Book::getAll()
         ]);
     }
 }
