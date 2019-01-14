@@ -35,6 +35,12 @@
         </tr>
         </thead>
         <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.name }}</td>
+            <td>★ {{ book.rating }}</td>
+        </tr>
+        {% endfor %}
         <tbody>
     </table>
 </div>
