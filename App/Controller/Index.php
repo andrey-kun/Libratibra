@@ -16,9 +16,17 @@ class Index extends \Core\Controller
 {
     public function indexAction()
     {
+        $books = Book::getAll();
+
+        $sortName = $_GET['sort'];
+
+        if (substr_count($sortName, 'Descending') > 0) {
+            $books = array_reverse($books);
+        }
+
         View::renderTemplate('index.html', [
             'projectName' => Config::PROJECT_NAME,
-            'books' => Book::getAll()
+            'books' => $books
         ]);
     }
 }
