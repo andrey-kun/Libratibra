@@ -10,5 +10,10 @@ namespace App;
 
 class Config
 {
+    const DB_HOST = 'localhost';
+    const DB_NAME = 'libratibra';
+    const DB_USER = 'libratibra';
+    const DB_PASSWORD = 'super-password';
+
     const PROJECT_NAME = 'Libratibra';
 }
