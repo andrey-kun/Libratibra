@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
     "This file is @generated automatically"
   ],
-  "content-hash": "8431e9c0378a55ef7c7b5ec54aa5805b",
+  "content-hash": "c70863684ecb6422bc12f4fa2b0eed3b",
   "packages": [
     {
       "name": "symfony/polyfill-ctype",
@@ -198,7 +198,8 @@
   "prefer-stable": false,
   "prefer-lowest": false,
   "platform": {
-    "php": "^7.2"
+    "php": "^7.2",
+    "ext-pdo": "^7.2"
   },
   "platform-dev": []
 }
