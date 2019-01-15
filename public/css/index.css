@@ -21,26 +21,16 @@ div.searchField {
 }
 
 
-div.booklist {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    width: 80%;
-}
-
-.booklist table {
-    background: white;
-    border: 4pt solid white;
-    border-radius: 8pt;
+table {
     width: 100%;
 }
 
-.booklist th {
+th {
     background: #d2a06b;
     padding: 4pt 16pt;
 }
 
-.booklist td {
+td {
     border: solid white;
     border-width: 8pt 0pt;
     margin: 140pt;
