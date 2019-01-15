@@ -39,6 +39,8 @@
         <tr>
             <td>{{ book.name }}</td>
             <td>★ {{ book.rating }}</td>
+            <td>{{ authors[book.author_id - 1].name }}</td>
+            <td>★ {{ authors[book.author_id - 1].rating }}</td>
         </tr>
         {% endfor %}
         <tbody>
