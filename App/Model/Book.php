@@ -15,7 +15,7 @@ class Book extends \Core\Model
     public static function getAll()
     {
         $db = static::getDB();
-        $stmt = $db->query('SELECT name, rating FROM books ORDER BY rating');
+        $stmt = $db->query('SELECT * FROM books ORDER BY rating');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
