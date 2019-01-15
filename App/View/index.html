@@ -47,6 +47,10 @@
         {% endfor %}
         <tbody>
     </table>
+
+    {% if (books)|length==0 %}
+    <p>Список книг пуст…</p>
+    {% endif %}
 </div>
 
 {% endblock %}
