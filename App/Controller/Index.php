@@ -28,7 +28,7 @@ class Index extends \Core\Controller
             $books = array_reverse($books);
         }
 
-        View::renderTemplate('index.html', [
+        View::renderTemplate('booklist.html', [
             'projectName' => Config::PROJECT_NAME,
             'books' => $books,
             'authors' => $authors,
