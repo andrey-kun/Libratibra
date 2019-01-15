@@ -11,6 +11,7 @@ namespace App\Controller;
 use App\Config;
 use App\Model\Author;
 use App\Model\Book;
+use App\Model\Genre;
 use Core\View;
 
 class Index extends \Core\Controller
@@ -19,6 +20,7 @@ class Index extends \Core\Controller
     {
         $books = Book::getAll();
         $authors = Author::getAll();
+        $genres = Genre::getAll();
 
         $sortName = $_GET['sort'];
 
@@ -29,7 +31,8 @@ class Index extends \Core\Controller
         View::renderTemplate('index.html', [
             'projectName' => Config::PROJECT_NAME,
             'books' => $books,
-            'authors' => $authors
+            'authors' => $authors,
+            'genres' => $genres
         ]);
     }
 }
