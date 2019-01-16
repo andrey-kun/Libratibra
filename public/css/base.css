@@ -6,17 +6,34 @@
 body {
     background: url(../img/index/background.jpg);
     background-size: cover;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-div.content {
+
+.content {
     background: white;
     border: 4pt solid white;
     border-radius: 8pt;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 8pt 0pt;
     text-align: center;
+}
+
+.content.left {
+    float: left;
+    width: 45%;
+}
+
+.content.right {
+    float: right;
+    width: 45%;
+}
+
+.content.center {
     width: 80%;
 }
+
 
 #titlelogo {
     text-align: center;
