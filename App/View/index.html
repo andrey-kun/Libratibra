@@ -103,18 +103,38 @@
 
 <div class="content right">
     <h1>Жанры</h1>
-    {% for genre in genres %}
-    <p>
-    <div>
-        {{ genre.name }}
-        ★ {{ genre.rating }}
-    </div>
-    <div>
-        <a href="genre/edit/{{ genre.id }}">🖉 Редактировать</a>
-        <a href="genre/del/{{ genre.id }}">❌ Удалить</a>
-    </div>
-    </p>
-    {% endfor %}
+    <table>
+        <thead>
+        <tr>
+            <th>
+                Имя жанра
+                <div class="panelSort">▼ ▲</div>
+            </th>
+            <th>
+                Рейтинг
+                <div class="panelSort">▼ ▲</div>
+            </th>
+            <th>
+                Кол-во книг
+                <div class="panelSort">▼ ▲</div>
+            </th>
+            <th>Операции</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for genre in genres %}
+        <tr>
+            <td>{{ genre.name }}</td>
+            <td>★ {{ genre.rating }}</td>
+            <td>N/A</td>
+            <td>
+                <a href="genre/edit/{{ book.id }}">🖉 Редактировать</a>
+                <a href="genre/del/{{ book.id }}">❌ Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+        <tbody>
+    </table>
 
     {% if (genres)|length==0 %}
     <p>Список жанров пуст…</p>
