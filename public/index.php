@@ -15,4 +15,8 @@ $router = new Core\Router();
 $router->add('', ['controller' => 'Booklist', 'action' => 'booklist']);
 $router->add('{controller}/{action}');
 
-$router->dispatch($_SERVER['QUERY_STRING']);
+try {
+    $router->dispatch(@$_SERVER['QUERY_STRING']);
+} catch (Exception $e) {
+    die($e->getMessage());
+}
