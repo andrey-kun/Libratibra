@@ -11,6 +11,9 @@ body {
     margin-right: auto;
 }
 
+h1 {
+    font-size: 16pt;
+}
 
 .content {
     background: white;
