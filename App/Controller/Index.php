@@ -22,13 +22,15 @@ class Index extends \Core\Controller
         $authors = Author::getAll();
         $genres = Genre::getAll();
 
-        $sortName = $_GET['sort'];
+        $sortName = @$_GET['sort'];
 
-        if (substr_count($sortName, 'Descending') > 0) {
-            $books = array_reverse($books);
+        if ($sortName !== null) {
+            if (substr_count($sortName, 'Descending') > 0) {
+                $books = array_reverse($books);
+            }
         }
 
-        View::renderTemplate('booklist.html', [
+        View::renderTemplate('index.html', [
             'projectName' => Config::PROJECT_NAME,
             'books' => $books,
             'authors' => $authors,

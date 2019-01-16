@@ -12,7 +12,6 @@ error_reporting(E_ALL);
 
 $router = new Core\Router();
 
-$router->add('/booklist', ['controller' => 'Booklist', 'action' => 'booklist']);
 $router->add('/', ['controller' => 'Index', 'action' => 'index']);
 $router->add('/{controller}/{action}');
 
