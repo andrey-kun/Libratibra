@@ -86,8 +86,8 @@
             <td>★ {{ author.rating }}</td>
             <td>N/A</td>
             <td>
-                <a href="author/edit/{{ book.id }}">🖉 Редактировать</a>
-                <a href="author/del/{{ book.id }}">❌ Удалить</a>
+                <a href="author/edit/{{ author.id }}">🖉 Редактировать</a>
+                <a href="author/del/{{ author.id }}">❌ Удалить</a>
             </td>
         </tr>
         {% endfor %}
@@ -128,8 +128,8 @@
             <td>★ {{ genre.rating }}</td>
             <td>N/A</td>
             <td>
-                <a href="genre/edit/{{ book.id }}">🖉 Редактировать</a>
-                <a href="genre/del/{{ book.id }}">❌ Удалить</a>
+                <a href="genre/edit/{{ genre.id }}">🖉 Редактировать</a>
+                <a href="genre/del/{{ genre.id }}">❌ Удалить</a>
             </td>
         </tr>
         {% endfor %}
