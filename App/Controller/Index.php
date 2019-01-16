@@ -30,7 +30,7 @@ class Index extends \Core\Controller
             }
         }
 
-        View::renderTemplate('index.html', [
+        View::renderTemplate('Index.html', [
             'projectName' => Config::PROJECT_NAME,
             'books' => $books,
             'authors' => $authors,
