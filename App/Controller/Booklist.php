@@ -16,7 +16,7 @@ use Core\View;
 
 class Booklist extends \Core\Controller
 {
-    public function indexAction()
+    public function booklistAction()
     {
         $books = Book::getAll();
         $authors = Author::getAll();
