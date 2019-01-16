@@ -61,24 +61,66 @@
 
 <div class="content left">
     <h1>Авторы</h1>
-    {% for author in authors %}
-    <p>
-    <div>
-        {{ author.name }}
-        ★ {{ author.rating }}
-    </div>
-    <div>
-        <a href="author/edit/{{ author.id }}">🖉 Редактировать</a>
-        <a href="author/del/{{ author.id }}">❌ Удалить</a>
-    </div>
-    </p>
-    {% endfor %}
+    <table>
+        <thead>
+        <tr>
+            <th>
+                Имя
+                <div class="panelSort">▼ ▲</div>
+            </th>
+            <th>
+                Рейтинг
+                <div class="panelSort">▼ ▲</div>
+            </th>
+            <th>
+                Кол-во книг
+                <div class="panelSort">▼ ▲</div>
+            </th>
+            <th>Операции</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for author in authors %}
+        <tr>
+            <td>{{ author.name }}</td>
+            <td>★ {{ author.rating }}</td>
+            <td>N/A</td>
+            <td>
+                <a href="book/edit/{{ book.id }}">🖉 Редактировать</a>
+                <a href="book/del/{{ book.id }}">❌ Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+        <tbody>
+    </table>
 
     {% if (authors)|length==0 %}
     <p>Список авторов пуст…</p>
     {% endif %}
 
     <p><a href="author/add">➕ Добавить автора…</a></p>
+</div>
+
+<div class="content right">
+    <h1>Жанры</h1>
+    {% for genre in genres %}
+    <p>
+    <div>
+        {{ genre.name }}
+        ★ {{ genre.rating }}
+    </div>
+    <div>
+        <a href="genre/edit/{{ genre.id }}">🖉 Редактировать</a>
+        <a href="genre/del/{{ genre.id }}">❌ Удалить</a>
+    </div>
+    </p>
+    {% endfor %}
+
+    {% if (genres)|length==0 %}
+    <p>Список жанров пуст…</p>
+    {% endif %}
+
+    <p><a href="genre/add">➕ Добавить жанр…</a></p>
 </div>
 
 {% endblock %}
