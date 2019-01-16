@@ -4,7 +4,7 @@
 
 {% block head %}
 
-<link href="css/index.css" rel="stylesheet">
+<link href="/css/index.css" rel="stylesheet">
 
 {% endblock %}
 
@@ -44,8 +44,8 @@
             <td>{{ genres[book.author_id - 1].name }}</td>
             <td>★ {{ genres[book.author_id - 1].rating }}</td>
             <td>
-                <a href="book/edit/{{ book.id }}">🖉 Редактировать</a>
-                <a href="book/del/{{ book.id }}">❌ Удалить</a>
+                <a href="/book/edit/{{ book.id }}">🖉 Редактировать</a>
+                <a href="/book/del/{{ book.id }}">❌ Удалить</a>
             </td>
         </tr>
         {% endfor %}
@@ -56,7 +56,7 @@
     <p>Список книг пуст…</p>
     {% endif %}
 
-    <p><a href="book/add">➕ Добавить книгу…</a></p>
+    <p><a href="/book/add">➕ Добавить книгу…</a></p>
 </div>
 
 <div class="content left">
@@ -86,8 +86,8 @@
             <td>★ {{ author.rating }}</td>
             <td>N/A</td>
             <td>
-                <a href="author/edit/{{ author.id }}">🖉 Редактировать</a>
-                <a href="author/del/{{ author.id }}">❌ Удалить</a>
+                <a href="/author/edit/{{ author.id }}">🖉 Редактировать</a>
+                <a href="/author/del/{{ author.id }}">❌ Удалить</a>
             </td>
         </tr>
         {% endfor %}
@@ -98,7 +98,7 @@
     <p>Список авторов пуст…</p>
     {% endif %}
 
-    <p><a href="author/add">➕ Добавить автора…</a></p>
+    <p><a href="/author/add">➕ Добавить автора…</a></p>
 </div>
 
 <div class="content right">
@@ -128,8 +128,8 @@
             <td>★ {{ genre.rating }}</td>
             <td>N/A</td>
             <td>
-                <a href="genre/edit/{{ genre.id }}">🖉 Редактировать</a>
-                <a href="genre/del/{{ genre.id }}">❌ Удалить</a>
+                <a href="/genre/edit/{{ genre.id }}">🖉 Редактировать</a>
+                <a href="/genre/del/{{ genre.id }}">❌ Удалить</a>
             </td>
         </tr>
         {% endfor %}
@@ -140,7 +140,7 @@
     <p>Список жанров пуст…</p>
     {% endif %}
 
-    <p><a href="genre/add">➕ Добавить жанр…</a></p>
+    <p><a href="/genre/add">➕ Добавить жанр…</a></p>
 </div>
 
 {% endblock %}

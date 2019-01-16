@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'IM FELL French Canon';
-    src: url(../fnt/IMFeFCit29P.ttf);
+    src: url(/fnt/IMFeFCit29P.ttf);
 }
 
 body {
-    background: url(../img/index/background.jpg);
+    background: url(/img/index/background.jpg);
     background-size: cover;
     width: 80%;
     margin-left: auto;

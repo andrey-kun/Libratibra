@@ -54,3 +54,13 @@ td {
 .panelSort {
     float: right;
 }
+
+.contentLeft {
+    float: left;
+    width: 40%;
+}
+
+.contentRight {
+    float: right;
+    width: 40%;
+}
