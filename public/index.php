@@ -12,11 +12,12 @@ error_reporting(E_ALL);
 
 $router = new Core\Router();
 
-$router->add('', ['controller' => 'Booklist', 'action' => 'booklist']);
-$router->add('{controller}/{action}');
+$router->add('/booklist', ['controller' => 'Booklist', 'action' => 'booklist']);
+$router->add('/', ['controller' => 'Index', 'action' => 'index']);
+$router->add('/{controller}/{action}');
 
 try {
-    $router->dispatch(@$_SERVER['QUERY_STRING']);
+    $router->dispatch(@$_SERVER['REQUEST_URI']);
 } catch (Exception $e) {
     die($e->getMessage());
 }
