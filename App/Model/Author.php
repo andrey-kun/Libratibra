@@ -22,14 +22,13 @@ class Author extends \Core\Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function __construct($name)
+    public static function create($name)
     {
-        $this->name = $name;
-
         $db = static::getDB();
 
         $stmt = $db->prepare("SELECT * FROM authors WHERE (name=:name)");
-        $stmt->execute((array)$this);
+        $stmt->bindParam(":name", $name);
+        $stmt->execute();
         $authorsWithSameName = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (!empty($authorsWithSameName)) {
@@ -37,6 +36,14 @@ class Author extends \Core\Model
         }
 
         $stmt = $db->prepare("INSERT INTO authors (name) values (:name)");
-        $stmt->execute((array)$this);
+        $stmt->bindParam(":name", $name);
+        $stmt->execute();
+
+        return new self($name);
+    }
+
+    private function __construct($name)
+    {
+        $this->name = $name;
     }
 }

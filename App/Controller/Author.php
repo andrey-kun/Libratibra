@@ -23,7 +23,7 @@ class Author extends \Core\Controller
 
         if ($name !== null && $name !== "") {
             try {
-                $author = new \App\Model\Author($name);
+                $author = \App\Model\Author::create($name);
             } catch (ReiterationException $e) {
                 $errorMessage = "Книга «${name}» уже существует!";
             }
