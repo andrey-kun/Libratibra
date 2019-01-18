@@ -35,7 +35,7 @@ class Author extends \Core\Model
             throw new ReiterationException();
         }
 
-        $stmt = $db->prepare("INSERT INTO authors (name) values (:name)");
+        $stmt = $db->prepare("INSERT INTO authors (name) VALUES (:name)");
         $stmt->bindParam(":name", $name);
         $stmt->execute();
 
