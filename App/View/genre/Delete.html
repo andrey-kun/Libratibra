@@ -1,0 +1,22 @@
+{% extends "Base.html" %}
+
+{% block title %}Подтверждение удаления — {{ projectName }}{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+<div class="content">
+    <a class="backLink" href="/">◀ На главную</a>
+    {% if message is not null %}
+    <h1>{{ message }}</h1>
+    {% else %}
+    <h1>Вы действительно хотите удалить жанр «{{ removableGenre.name }}»?</h1>
+    <form action="/genre/del/{{ removableGenre.id }}">
+        <button name="agree" type="submit">Подтвердить удаление</button>
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
