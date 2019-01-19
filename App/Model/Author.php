@@ -76,6 +76,17 @@ class Author extends \Core\Model
         return !empty($authorsWithSameName);
     }
 
+    public function remove()
+    {
+        $db = static::getDB();
+
+        $stmt = $db->prepare("DELETE FROM authors WHERE id=:id");
+        $stmt->bindParam(":id", $this->id);
+        $stmt->execute();
+
+        $this->id = $this->name = null;
+    }
+
     private function __construct($id, $name)
     {
         $this->id = $id;

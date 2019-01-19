@@ -67,4 +67,26 @@ class Author extends \Core\Controller
             'message' => $message
         ]);
     }
+
+    public function delAction()
+    {
+        $id = $this->route_params['id'];
+        $isAgree = isset($_GET['agree']);
+        $message = null;
+
+        $removableAuthor = \App\Model\Author::getById($id);
+
+        if ($removableAuthor === null) {
+            $message = "Автора с ID $id не существует, свяжитесь с администратором.";
+        } elseif ($isAgree) {
+            $message = "Автор «" . $removableAuthor->name . "» удалён";
+            $removableAuthor->remove();
+        }
+
+        View::renderTemplate('author/Delete.html', [
+            'projectName' => Config::PROJECT_NAME,
+            'removableAuthor' => $removableAuthor,
+            'message' => $message
+        ]);
+    }
 }
