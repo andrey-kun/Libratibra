@@ -28,7 +28,7 @@
             <th colspan="2">Автор
                 <div class="panelSort">▼ ▲</div>
             </th>
-            <th colspan="2">Жанр
+            <th colspan="1">Жанр
                 <div class="panelSort">▼ ▲</div>
             </th>
             <th>Операции</th>
@@ -42,7 +42,6 @@
             <td>{{ authors[book.author_id - 1].name }}</td>
             <td>★ {{ authors[book.author_id - 1].rating }}</td>
             <td>{{ genres[book.author_id - 1].name }}</td>
-            <td>★ {{ genres[book.author_id - 1].rating }}</td>
             <td>
                 <a href="/book/edit/{{ book.id }}">🖉 Редактировать</a>
                 <a href="/book/del/{{ book.id }}">❌ Удалить</a>
@@ -110,14 +109,6 @@
                 Имя жанра
                 <div class="panelSort">▼ ▲</div>
             </th>
-            <th>
-                Рейтинг
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th>
-                Кол-во книг
-                <div class="panelSort">▼ ▲</div>
-            </th>
             <th>Операции</th>
         </tr>
         </thead>
@@ -125,8 +116,6 @@
         {% for genre in genres %}
         <tr>
             <td>{{ genre.name }}</td>
-            <td>★ {{ genre.rating }}</td>
-            <td>N/A</td>
             <td>
                 <a href="/genre/edit/{{ genre.id }}">🖉 Редактировать</a>
                 <a href="/genre/del/{{ genre.id }}">❌ Удалить</a>
