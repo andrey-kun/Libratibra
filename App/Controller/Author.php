@@ -23,7 +23,7 @@ class Author extends \Core\Controller
 
         if ($name !== null && $name !== "") {
             try {
-                $author = \App\Model\Author::create($name);
+                $author = \App\Model\Author::insert($name);
             } catch (ReiterationException $e) {
                 $errorMessage = "Книга «${name}» уже существует!";
             }
@@ -33,6 +33,36 @@ class Author extends \Core\Controller
             'projectName' => Config::PROJECT_NAME,
             'addedAuthor' => $author,
             'errorMessage' => $errorMessage
+        ]);
+    }
+
+    public function editAction()
+    {
+        $id = $this->route_params['id'];
+        $newName = @$_GET['newName'];
+        $author = null;
+        $message = null;
+
+        $editableAuthor = \App\Model\Author::getById($id);
+
+        if ($editableAuthor === null) {
+            $message = "Автора с ID $id не существует, свяжитесь с администратором.";
+        }
+
+        if ($id !== null && $newName !== null) {
+            if ($editableAuthor->name !== $newName) {
+                $message = "Автор переименован с «" . $editableAuthor->name . "» на «${newName}»";
+                $editableAuthor->name = $newName;
+                $editableAuthor->flush();
+            } else {
+                $message = "Вы дали автору «${newName}» такое же имя, которое он несёт.";
+            }
+        }
+
+        View::renderTemplate('author/Edit.html', [
+            'projectName' => Config::PROJECT_NAME,
+            'editableAuthor' => $editableAuthor,
+            'message' => $message
         ]);
     }
 }
