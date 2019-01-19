@@ -14,6 +14,7 @@ $router = new Core\Router();
 
 $router->add('/', ['controller' => 'Index', 'action' => 'index']);
 $router->add('/{controller}/{action}');
+$router->add('/author/{action}/{id:\d+}', ['controller' => 'Author', 'action' => '{action}']);
 
 try {
     $router->dispatch(@$_SERVER['REQUEST_URI']);
