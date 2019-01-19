@@ -50,12 +50,14 @@ class Author extends \Core\Controller
         }
 
         if ($id !== null && $newName !== null) {
-            if ($editableAuthor->name !== $newName) {
+            if (\App\Model\Author::isExists($newName)) {
+                $message = "Уже существует автор «${newName}»!";
+            } elseif ($editableAuthor->name === $newName) {
+                $message = "Вы дали автору «${newName}» такое же имя, которое он несёт.";
+            } else {
                 $message = "Автор переименован с «" . $editableAuthor->name . "» на «${newName}»";
                 $editableAuthor->name = $newName;
                 $editableAuthor->flush();
-            } else {
-                $message = "Вы дали автору «${newName}» такое же имя, которое он несёт.";
             }
         }
 

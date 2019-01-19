@@ -27,12 +27,7 @@ class Author extends \Core\Model
     {
         $db = static::getDB();
 
-        $stmt = $db->prepare("SELECT * FROM authors WHERE (name=:name)");
-        $stmt->bindParam(":name", $name);
-        $stmt->execute();
-        $authorsWithSameName = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if (!empty($authorsWithSameName)) {
+        if (self::isExists($name)) {
             throw new ReiterationException();
         }
 
@@ -67,6 +62,18 @@ class Author extends \Core\Model
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":name", $this->name);
         $stmt->execute();
+    }
+
+    public static function isExists($name)
+    {
+        $db = static::getDB();
+
+        $stmt = $db->prepare("SELECT * FROM authors WHERE (name=:name)");
+        $stmt->bindParam(":name", $name);
+        $stmt->execute();
+        $authorsWithSameName = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return !empty($authorsWithSameName);
     }
 
     private function __construct($id, $name)
