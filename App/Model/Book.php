@@ -8,14 +8,10 @@
 
 namespace App\Model;
 
-use PDO;
-
-class Book extends \Core\Model
+class Book extends Content
 {
-    public static function getAll()
+    protected static function getTableName()
     {
-        $db = static::getDB();
-        $stmt = $db->query('SELECT * FROM books ORDER BY rating');
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return "books";
     }
 }
