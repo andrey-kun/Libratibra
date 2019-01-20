@@ -9,6 +9,7 @@
 namespace App\Model;
 
 
+use App\ReiterationException;
 use PDO;
 
 abstract class Content extends \Core\Model
