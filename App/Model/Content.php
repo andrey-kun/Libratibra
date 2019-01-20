@@ -41,7 +41,7 @@ abstract class Content extends \Core\Model
         $stmt = $db->prepare("SELECT * FROM " . static::getTableName() . " WHERE (id=:id)");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
-        $foundAuthor = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+        $foundAuthor = @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
 
         if ($foundAuthor === null || empty($foundAuthor)) {
             return null;
