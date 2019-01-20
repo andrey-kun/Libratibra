@@ -1,0 +1,25 @@
+{% extends "Base.html" %}
+
+{% block title %}{{ title }} — {{ projectName }}{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+{% if message is not null %}
+<div class="content">
+    {{ message }}
+</div>
+{% endif %}
+
+<div class="content">
+    <a href="/" class="backLink">◀ На главную</a>
+    <h1>{{ title }}</h1>
+    <form action="{{ actionUrl }}">
+        <input type="text" placeholder="Имя" name="name">
+        <button type="submit">Создать</button>
+    </form>
+</div>
+
+{% endblock %}

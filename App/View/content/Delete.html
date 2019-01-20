@@ -1,0 +1,22 @@
+{% extends "Base.html" %}
+
+{% block title %}{{ title }} — {{ projectName }}{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+<div class="content">
+    <a class="backLink" href="/">◀ На главную</a>
+    {% if message is not null %}
+    <h1>{{ message }}</h1>
+    {% else %}
+    <h1>{{ caption }}</h1>
+    <form action="{{ actionUrl }}">
+        <button name="agree" type="submit">Подтвердить удаление</button>
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}

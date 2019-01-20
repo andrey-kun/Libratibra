@@ -8,84 +8,33 @@
 
 namespace App\Controller;
 
-
-use App\Config;
-use App\ReiterationException;
-use Core\View;
-
-class Genre extends \Core\Controller
+class Genre extends Content
 {
-    public function addAction()
+    public static function getModel()
     {
-        $name = @$_GET['name'];
-        $genre = null;
-        $errorMessage = null;
-
-        if ($name !== null && $name !== "") {
-            try {
-                $genre = \App\Model\Genre::insert($name);
-            } catch (ReiterationException $e) {
-                $errorMessage = "Жанр «${name}» уже существует!";
-            }
-        }
-
-        View::renderTemplate('genre/Add.html', [
-            'projectName' => Config::PROJECT_NAME,
-            'addedGenre' => $genre,
-            'errorMessage' => $errorMessage
-        ]);
+        return \App\Model\Genre::class;
     }
 
-    public function editAction()
+    public function getMessage($id, ...$args)
     {
-        $id = $this->route_params['id'];
-        $newName = @$_GET['newName'];
-        $message = null;
-
-        $editableGenre = \App\Model\Genre::getById($id);
-
-        if ($editableGenre === null) {
-            $message = "Жанр с ID $id не существует, свяжитесь с администратором.";
-        }
-
-        if ($id !== null && $newName !== null) {
-            if (\App\Model\Genre::isExists($newName)) {
-                $message = "Уже существует жанр «${newName}»!";
-            } elseif ($editableGenre->name === $newName) {
-                $message = "Вы дали жанру «${newName}» такое же имя!";
-            } else {
-                $message = "Жанр переименован с «" . $editableGenre->name . "» на «${newName}»";
-                $editableGenre->name = $newName;
-                $editableGenre->flush();
-            }
-        }
-
-        View::renderTemplate('genre/Edit.html', [
-            'projectName' => Config::PROJECT_NAME,
-            'editableGenre' => $editableGenre,
-            'message' => $message
-        ]);
+        $messages = [
+            'addSuccess' => "Жанр «%s» успешно добавлен.",
+            'addTitle' => "Добавление жанра…",
+            'alreadyExists' => "Жанр «%s» уже существует!",
+            'delSuccess' => "Жанр «%s» удалён",
+            'delTitle' => "Удаление жанра",
+            'delCaption' => "Удалить жанр «%s»?",
+            'editTitle' => "Редактирование жанра…",
+            'editCaption' => "Редактирование жанра «%s»…",
+            'matchingNames' => "Вы дали жанру «%s» такое же имя!",
+            'missingId' => "Жанр с ID %d не существует, свяжитесь с администратором.",
+            'renameSuccess' => "Жанр «%s» переименован в «%s»",
+        ];
+        return vsprintf($messages[$id], $args);
     }
 
-    public function delAction()
+    public static function getActionUrl()
     {
-        $id = $this->route_params['id'];
-        $isAgree = isset($_GET['agree']);
-        $message = null;
-
-        $removableGenre = \App\Model\Genre::getById($id);
-
-        if ($removableGenre === null) {
-            $message = "Жанр с ID $id не существует, свяжитесь с администратором.";
-        } elseif ($isAgree) {
-            $message = "Жанр «" . $removableGenre->name . "» удалён";
-            $removableGenre->remove();
-        }
-
-        View::renderTemplate('genre/Delete.html', [
-            'projectName' => Config::PROJECT_NAME,
-            'removableGenre' => $removableGenre,
-            'message' => $message
-        ]);
+        return "/genre";
     }
 }

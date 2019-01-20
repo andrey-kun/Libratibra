@@ -8,85 +8,33 @@
 
 namespace App\Controller;
 
-
-use App\Config;
-use App\ReiterationException;
-use Core\View;
-
-class Author extends \Core\Controller
+class Author extends Content
 {
-    public function addAction()
+    public static function getModel()
     {
-        $name = @$_GET['name'];
-        $author = null;
-        $errorMessage = null;
-
-        if ($name !== null && $name !== "") {
-            try {
-                $author = \App\Model\Author::insert($name);
-            } catch (ReiterationException $e) {
-                $errorMessage = "Книга «${name}» уже существует!";
-            }
-        }
-
-        View::renderTemplate('author/Add.html', [
-            'projectName' => Config::PROJECT_NAME,
-            'addedAuthor' => $author,
-            'errorMessage' => $errorMessage
-        ]);
+        return \App\Model\Author::class;
     }
 
-    public function editAction()
+    public function getMessage($id, ...$args)
     {
-        $id = $this->route_params['id'];
-        $newName = @$_GET['newName'];
-        $author = null;
-        $message = null;
-
-        $editableAuthor = \App\Model\Author::getById($id);
-
-        if ($editableAuthor === null) {
-            $message = "Автора с ID $id не существует, свяжитесь с администратором.";
-        }
-
-        if ($id !== null && $newName !== null) {
-            if (\App\Model\Author::isExists($newName)) {
-                $message = "Уже существует автор «${newName}»!";
-            } elseif ($editableAuthor->name === $newName) {
-                $message = "Вы дали автору «${newName}» такое же имя, которое он несёт.";
-            } else {
-                $message = "Автор переименован с «" . $editableAuthor->name . "» на «${newName}»";
-                $editableAuthor->name = $newName;
-                $editableAuthor->flush();
-            }
-        }
-
-        View::renderTemplate('author/Edit.html', [
-            'projectName' => Config::PROJECT_NAME,
-            'editableAuthor' => $editableAuthor,
-            'message' => $message
-        ]);
+        $messages = [
+            'addSuccess' => "Автор «%s» успешно добавлен.",
+            'addTitle' => "Добавление автора…",
+            'alreadyExists' => "Автор «%s» уже существует!",
+            'delSuccess' => "Автор «%s» удалён",
+            'delTitle' => "Удаление автора",
+            'delCaption' => "Удалить автора «%s»?",
+            'editTitle' => "Редактирование автора…",
+            'editCaption' => "Редактирование автора «%s»…",
+            'matchingNames' => "Вы дали автору «%s» такое же имя, которое он несёт.",
+            'missingId' => "Автора с ID %d не существует, свяжитесь с администратором.",
+            'renameSuccess' => "Автор «%s» переименован в «%s»",
+        ];
+        return vsprintf($messages[$id], $args);
     }
 
-    public function delAction()
+    public static function getActionUrl()
     {
-        $id = $this->route_params['id'];
-        $isAgree = isset($_GET['agree']);
-        $message = null;
-
-        $removableAuthor = \App\Model\Author::getById($id);
-
-        if ($removableAuthor === null) {
-            $message = "Автора с ID $id не существует, свяжитесь с администратором.";
-        } elseif ($isAgree) {
-            $message = "Автор «" . $removableAuthor->name . "» удалён";
-            $removableAuthor->remove();
-        }
-
-        View::renderTemplate('author/Delete.html', [
-            'projectName' => Config::PROJECT_NAME,
-            'removableAuthor' => $removableAuthor,
-            'message' => $message
-        ]);
+        return "/author";
     }
 }
