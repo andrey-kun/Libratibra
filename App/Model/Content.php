@@ -6,96 +6,100 @@
  * Time: 20:47
  */
 
+declare(strict_types=1);
+
 namespace App\Model;
 
 
 use App\ReiterationException;
+use Core\Model;
 use PDO;
 
-abstract class Content extends \Core\Model
+abstract class Content extends Model
 {
     public $id;
     public $name;
 
     private $isRemoved = false;
 
-    protected function __construct($id, $name)
+    protected function __construct($id, array $model_fields)
     {
         $this->id = $id;
-        $this->name = $name;
+        foreach ($model_fields as $field => $value) {
+            $this->$field = $value;
+        }
     }
 
     public static function getAll()
     {
-        $db = static::getDB();
-        $stmt = $db->query('SELECT * FROM ' . static::getTableName());
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $database = static::getDB();
+        $statement = $database->query('SELECT * FROM ' . static::getTableName());
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     protected static abstract function getTableName();
 
     public static function getById($id)
     {
-        $db = static::getDB();
+        $database = static::getDB();
 
-        $stmt = $db->prepare("SELECT * FROM " . static::getTableName() . " WHERE (id=:id)");
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-        $foundAuthor = @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+        $statement = $database->prepare("SELECT * FROM " . static::getTableName() . " WHERE (id=:id)");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        $found_content = @$statement->fetchAll(PDO::FETCH_ASSOC)[0];
 
-        if ($foundAuthor === null || empty($foundAuthor)) {
+        if ($found_content === null || empty($found_content)) {
             return null;
         }
 
-        return new static($id, $foundAuthor['name']);
+        return new static($id, $found_content['name']);
     }
 
-    public static function insert($name)
+    public static function insert($model_fields)
     {
-        $db = static::getDB();
+        $database = static::getDB();
 
-        if (static::isExists($name)) {
+        if (static::isExists($model_fields['name'])) {
             throw new ReiterationException();
         }
 
-        $stmt = $db->prepare("INSERT INTO " . static::getTableName() . " (name) VALUES (:name)");
-        $stmt->bindParam(":name", $name);
-        $stmt->execute();
+        $statement = $database->prepare("INSERT INTO " . static::getTableName() . " (name) VALUES (:name)");
+        $statement->execute($model_fields);
 
-        return new static($db->lastInsertId(), $name);
+        return new static($database->lastInsertId(), $model_fields);
     }
 
-    public static function isExists($name)
+    public static function isExists(string $name)
     {
-        $db = static::getDB();
+        $database = static::getDB();
 
-        $stmt = $db->prepare("SELECT name FROM " . static::getTableName() . " WHERE (name=:name)");
-        $stmt->bindParam(":name", $name);
-        $stmt->execute();
-        $contentsWithSameName = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $statement = $database->prepare("SELECT name FROM " . static::getTableName() . " WHERE (name=:name)");
+        $statement->bindParam(":name", $name);
+        $statement->execute();
+        $array_contents = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        return !empty($contentsWithSameName);
+        return !empty($array_contents);
     }
 
     public function flush()
     {
-        $db = static::getDB();
+        $database = static::getDB();
 
-        $stmt = $db->prepare("UPDATE " . static::getTableName() . " SET name=:name WHERE id=:id");
-        $stmt->bindParam(":id", $this->id);
-        $stmt->bindParam(":name", $this->name);
-        $stmt->execute();
+        $statement = $database->prepare("UPDATE " . static::getTableName() . " SET name=:name WHERE id=:id");
+        $statement->bindParam(":id", $this->id);
+        $statement->bindParam(":name", $this->name);
+        $statement->execute();
     }
 
     public function remove()
     {
         if ($this->isRemoved) return;
 
-        $db = static::getDB();
+        $database = static::getDB();
 
-        $stmt = $db->prepare("DELETE FROM " . static::getTableName() . " WHERE id=:id");
-        $stmt->bindParam(":id", $this->id);
-        $stmt->execute();
+        $statement = $database->prepare("DELETE FROM " . static::getTableName() . " WHERE id=:id");
+        $statement->bindParam(":id", $this->id);
+        $statement->execute();
 
         $this->isRemoved = true;
     }
