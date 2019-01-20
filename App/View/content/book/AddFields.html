@@ -1,0 +1,12 @@
+Автор:
+<select name="author_id">
+    {% for author in authors %}
+    <option value="{{ author.id }}">{{ author.name }} ★{{ author.rating}}</option>
+    {% endfor %}
+</select>
+Жанр:
+<select name="genre_id">
+    {% for genre in genres %}
+    <option value="{{ genre.id }}">{{ genre.name }}</option>
+    {% endfor %}
+</select>

@@ -30,13 +30,16 @@ abstract class Content extends \Core\Controller
             }
         }
 
-        View::renderTemplate('content/Add.html', [
+        $templateParams = [
             'actionUrl' => static::getActionUrl() . '/add',
             'content' => $content,
             'message' => $message,
             'projectName' => Config::PROJECT_NAME,
+            'templateLinks' => static::getTemplateLinks(),
             'title' => static::getMessage('addTitle'),
-        ]);
+        ];
+
+        $this->renderTemplate('content/Add.html', $templateParams);
     }
 
     public abstract static function getModel();
@@ -44,6 +47,8 @@ abstract class Content extends \Core\Controller
     public abstract function getMessage($id, ...$args);
 
     public abstract static function getActionUrl();
+
+    public abstract static function getTemplateLinks();
 
     public function editAction()
     {
@@ -68,14 +73,17 @@ abstract class Content extends \Core\Controller
             }
         }
 
-        View::renderTemplate('content/Edit.html', [
+        $templateParams = [
             'actionUrl' => static::getActionUrl() . '/edit/' . $id,
             'caption' => @static::getMessage('editCaption', $content->name),
             'content' => $content,
             'message' => $message,
             'projectName' => Config::PROJECT_NAME,
-            'title' => @static::getMessage('editTitle'),
-        ]);
+            'templateLinks' => static::getTemplateLinks(),
+            'title' => @static::getMessage('editTitle')
+        ];
+
+        $this->renderTemplate('content/Edit.html', $templateParams);
     }
 
     public function delAction()
@@ -93,13 +101,21 @@ abstract class Content extends \Core\Controller
             $content->remove();
         }
 
-        View::renderTemplate('content/Delete.html', [
+        $templateParams = [
             'actionUrl' => static::getActionUrl() . '/del/' . @$content->id,
-            'caption' => @static::getMessage('delCaption', @$content->name),
+            'caption' => @static::getMessage('delCaption', $content->name),
             'content' => $content,
             'message' => $message,
             'projectName' => Config::PROJECT_NAME,
-            'title' => @static::getMessage('delTitle'),
-        ]);
+            'templateLinks' => static::getTemplateLinks(),
+            'title' => @static::getMessage('delTitle')
+        ];
+
+        $this->renderTemplate('content/Delete.html', $templateParams);
+    }
+
+    public function renderTemplate($path, $params)
+    {
+        View::renderTemplate($path, $params);
     }
 }

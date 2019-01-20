@@ -9,17 +9,21 @@
 
 {% if message is not null %}
 <div class="content">
-    {{ message }}
+    <a class="backLink" href="/">◀ На главную</a>
+    <h1>{{ message }}</h1>
 </div>
-{% endif %}
-
+{% else %}
 <div class="content">
     <a href="/" class="backLink">◀ На главную</a>
     <h1>{{ title }}</h1>
     <form action="{{ actionUrl }}">
         <input type="text" placeholder="Имя" name="name">
+        {% if templateLinks is not null %}
+        {% include templateLinks.addFields %}
+        {% endif %}
         <button type="submit">Создать</button>
     </form>
 </div>
+{% endif %}
 
 {% endblock %}

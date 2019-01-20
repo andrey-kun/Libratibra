@@ -37,4 +37,9 @@ class Author extends Content
     {
         return "/author";
     }
+
+    public static function getTemplateLinks()
+    {
+        return null;
+    }
 }

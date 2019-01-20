@@ -37,4 +37,9 @@ class Genre extends Content
     {
         return "/genre";
     }
+
+    public static function getTemplateLinks()
+    {
+        return null;
+    }
 }

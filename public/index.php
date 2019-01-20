@@ -15,6 +15,7 @@ $router = new Core\Router();
 $router->add('/', ['controller' => 'Index', 'action' => 'index']);
 $router->add('/{controller}/{action}');
 $router->add('/author/{action}/{id:\d+}', ['controller' => 'Author', 'action' => '{action}']);
+$router->add('/book/{action}/{id:\d+}', ['controller' => 'Book', 'action' => '{action}']);
 $router->add('/genre/{action}/{id:\d+}', ['controller' => 'Genre', 'action' => '{action}']);
 
 try {
