@@ -34,7 +34,11 @@ abstract class Content extends Model
     {
         $database = static::getDB();
         $statement = $database->query('SELECT * FROM ' . static::getTableName());
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_GROUP | PDO::FETCH_UNIQUE);
+        foreach ($data as $id => &$content) {
+            $content['id'] = $id;
+        }
+        return $data;
     }
 
     protected static abstract function getTableName();

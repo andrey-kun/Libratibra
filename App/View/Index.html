@@ -39,9 +39,9 @@
         <tr>
             <td>{{ book.name }}</td>
             <td>★ {{ book.rating }}</td>
-            <td>{{ authors[book.author_id - 1].name }}</td>
-            <td>★ {{ authors[book.author_id - 1].rating }}</td>
-            <td>{{ genres[book.author_id - 1].name }}</td>
+            <td>{{ authors[book.author_id].name }}</td>
+            <td>★ {{ authors[book.author_id].rating }}</td>
+            <td>{{ genres[book.genre_id].name }}</td>
             <td>
                 <a href="/book/edit/{{ book.id }}">🖉 Редактировать</a>
                 <a href="/book/delete/{{ book.id }}">❌ Удалить</a>
