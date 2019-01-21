@@ -35,6 +35,7 @@ class Book extends Content
     {
         $author_id = @$_GET['author_id'];
         $genre_id = @$_GET['genre_id'];
+        $rating = @$_GET['rating'];
         $authors = \App\Model\Author::getAll();
         $genres = \App\Model\Genre::getAll();
         $message = null;
@@ -49,19 +50,16 @@ class Book extends Content
 
         if ($message === null
             && $author_id !== null
-            && $genre_id !== null) {
+            && $genre_id !== null
+            && $rating !== null) {
             $model_params = [
                 'author_id' => $author_id,
                 'genre_id' => $genre_id,
+                'rating' => $rating,
             ];
             parent::insert($model_params);
         } else {
-            $templateParams = [
-                'message' => $message,
-                'projectName' => Config::PROJECT_NAME,
-                'title' => static::getMessage('addTitle'),
-            ];
-            $this->renderTemplate('content/Add.html', $templateParams);
+            parent::insert(null);
         }
     }
 

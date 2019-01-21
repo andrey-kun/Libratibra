@@ -4,6 +4,8 @@
     <option value="{{ author.id }}">{{ author.name }} ★{{ author.rating}}</option>
     {% endfor %}
 </select>
+Рейтинг:
+<input type="number" name="rating" min="1" max="5" step="0.1">
 Жанр:
 <select name="genre_id">
     {% for genre in genres %}

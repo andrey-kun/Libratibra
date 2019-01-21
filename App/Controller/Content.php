@@ -21,7 +21,7 @@ abstract class Content extends \Core\Controller
         $message = null;
         $name = @$_GET['name'];
 
-        if ($name !== null && $name !== "") {
+        if ($name !== null && $name !== "" && $model_fields !== null) {
             try {
                 $content_fields = [
                     'name' => $name

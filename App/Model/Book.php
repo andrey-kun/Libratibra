@@ -12,6 +12,7 @@ class Book extends Content
 {
     public $authorId;
     public $genresId;
+    public $rating;
 
     public static function insert($model_fields)
     {
