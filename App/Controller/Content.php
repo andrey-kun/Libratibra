@@ -15,7 +15,7 @@ use Core\View;
 
 abstract class Content extends \Core\Controller
 {
-    public function addAction()
+    public function insert($model_fields)
     {
         $content = null;
         $message = null;
@@ -23,7 +23,11 @@ abstract class Content extends \Core\Controller
 
         if ($name !== null && $name !== "") {
             try {
-                $content = static::getModel()::insert($name);
+                $content_fields = [
+                    'name' => $name
+                ];
+                $model_fields = array_merge($content_fields, $model_fields);
+                $content = static::insertIntoModel($model_fields);
                 $message = static::getMessage('addSuccess', $name);
             } catch (ReiterationException $e) {
                 $message = static::getMessage('alreadyExists', $name);
@@ -42,15 +46,8 @@ abstract class Content extends \Core\Controller
         $this->renderTemplate('content/Add.html', $templateParams);
     }
 
-    public abstract static function getModel();
 
-    public abstract function getMessage($id, ...$args);
-
-    public abstract static function getActionUrl();
-
-    public abstract static function getTemplateLinks();
-
-    public function editAction()
+    public function update($model_fields)
     {
         $id = $this->route_params['id'];
         $message = null;
@@ -86,7 +83,7 @@ abstract class Content extends \Core\Controller
         $this->renderTemplate('content/Edit.html', $templateParams);
     }
 
-    public function delAction()
+    public function delete()
     {
         $id = $this->route_params['id'];
         $isAgree = isset($_GET['agree']);
@@ -97,21 +94,40 @@ abstract class Content extends \Core\Controller
         if ($content === null) {
             $message = static::getMessage('missingId', $id);
         } elseif ($isAgree) {
-            $message = static::getMessage('delSuccess', $content->name);
+            $message = static::getMessage('deleteSuccess', $content->name);
             $content->remove();
         }
 
         $templateParams = [
-            'actionUrl' => static::getActionUrl() . '/del/' . @$content->id,
-            'caption' => @static::getMessage('delCaption', $content->name),
+            'actionUrl' => static::getActionUrl() . '/delete/' . @$content->id,
+            'caption' => @static::getMessage('deleteCaption', $content->name),
             'content' => $content,
             'message' => $message,
             'projectName' => Config::PROJECT_NAME,
             'templateLinks' => static::getTemplateLinks(),
-            'title' => @static::getMessage('delTitle')
+            'title' => @static::getMessage('deleteTitle')
         ];
 
         $this->renderTemplate('content/Delete.html', $templateParams);
+    }
+
+    public abstract function addAction();
+
+    public abstract function deleteAction();
+
+    public abstract function editAction();
+
+    public abstract static function getModel();
+
+    public abstract function getMessage($id, ...$args);
+
+    public abstract static function getActionUrl();
+
+    public abstract static function getTemplateLinks();
+
+    protected function insertIntoModel($model_fields)
+    {
+        return static::getModel()::insert($model_fields);
     }
 
     public function renderTemplate($path, $params)

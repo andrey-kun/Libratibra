@@ -12,7 +12,6 @@ use App\Config;
 
 class Book extends Content
 {
-
     public static function getModel()
     {
         return \App\Model\Book::class;
@@ -34,6 +33,8 @@ class Book extends Content
 
     public function addAction()
     {
+        $author_id = @$_GET['author_id'];
+        $genre_id = @$_GET['genre_id'];
         $authors = \App\Model\Author::getAll();
         $genres = \App\Model\Genre::getAll();
         $message = null;
@@ -46,8 +47,14 @@ class Book extends Content
             $message = $this->getMessage('listGenresEmpty');
         }
 
-        if ($message === null) {
-            parent::addAction();
+        if ($message === null
+            && $author_id !== null
+            && $genre_id !== null) {
+            $model_params = [
+                'author_id' => $author_id,
+                'genre_id' => $genre_id,
+            ];
+            parent::insert($model_params);
         } else {
             $templateParams = [
                 'message' => $message,
@@ -64,9 +71,9 @@ class Book extends Content
             'addSuccess' => "Книга «%s» успешно добавлена.",
             'addTitle' => "Добавление книги…",
             'alreadyExists' => "Книга «%s» уже существует!",
-            'delSuccess' => "Книга «%s» удалёна",
-            'delTitle' => "Удаление книги",
-            'delCaption' => "Удалить книгу «%s»?",
+            'deleteSuccess' => "Книга «%s» удалёна",
+            'deleteTitle' => "Удаление книги",
+            'deleteCaption' => "Удалить книгу «%s»?",
             'editTitle' => "Редактирование книги…",
             'editCaption' => "Редактирование книги «%s»…",
             'listAuthorsEmpty' => 'Список авторов пуст!',
@@ -87,5 +94,40 @@ class Book extends Content
         ];
         $updParams = array_merge($bookParams, $params);
         parent::renderTemplate($path, $updParams);
+    }
+
+    public function deleteAction()
+    {
+        parent::delete();
+    }
+
+    public function editAction()
+    {
+        $author_id = @$_GET['author_id'];
+        $genre_id = @$_GET['genre_id'];
+        $authors = \App\Model\Author::getAll();
+        $genres = \App\Model\Genre::getAll();
+        $message = null;
+
+        if ($message === null
+            && $author_id !== null
+            && $genre_id !== null) {
+            $model_params = [
+                'author_id' => $author_id,
+                'genre_id' => $genre_id,
+            ];
+            parent::update($model_params);
+        } else {
+            if ($message !== null) {
+                $templateParams = [
+                    'message' => $message,
+                    'projectName' => Config::PROJECT_NAME,
+                    'title' => static::getMessage('editTitle'),
+                ];
+                $this->renderTemplate('content/Edit.html', $templateParams);
+            } else {
+                parent::update(null);
+            }
+        }
     }
 }

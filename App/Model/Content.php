@@ -52,7 +52,7 @@ abstract class Content extends Model
             return null;
         }
 
-        return new static($id, $found_content['name']);
+        return new static($id, $found_content);
     }
 
     public static function insert($model_fields)
@@ -63,8 +63,11 @@ abstract class Content extends Model
             throw new ReiterationException();
         }
 
-        $statement = $database->prepare("INSERT INTO " . static::getTableName() . " (name) VALUES (:name)");
-        $statement->execute($model_fields);
+        $bind = ':' . implode(',:', array_keys($model_fields));
+        $statement = $database->prepare("INSERT INTO " . static::getTableName()
+            . '(' . implode(',', array_keys($model_fields)) . ') '
+            . 'values (' . $bind . ')');
+        $statement->execute(array_combine(explode(',', $bind), array_values($model_fields)));
 
         return new static($database->lastInsertId(), $model_fields);
     }
@@ -79,6 +82,18 @@ abstract class Content extends Model
         $array_contents = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return !empty($array_contents);
+    }
+
+    public function update($model_fields)
+    {
+        $database = static::getDB();
+
+        $bind = ':' . implode(',:', array_keys($model_fields));
+        $statement = $database->prepare("UPDATE INTO " . static::getTableName()
+            . " SET " . $this->pdoSet($model_fields)
+            . "WHERE id=:id");
+        $statement->bindParam(":id", $this->id);
+        $statement->execute($model_fields);
     }
 
     public function flush()
@@ -102,5 +117,19 @@ abstract class Content extends Model
         $statement->execute();
 
         $this->isRemoved = true;
+    }
+
+    private function pdoSet($allowed, $values = 0, $source = array())
+    {
+        $set = '';
+        $values = array();
+        if (!$source) $source = &$_POST;
+        foreach ($allowed as $field) {
+            if (isset($source[$field])) {
+                $set .= "`" . str_replace("`", "``", $field) . "`" . "=:$field, ";
+                $values[$field] = $source[$field];
+            }
+        }
+        return substr($set, 0, -2);
     }
 }
