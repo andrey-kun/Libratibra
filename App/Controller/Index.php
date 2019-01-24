@@ -24,6 +24,8 @@ class Index extends \Core\Controller
 
         $sortName = @$_GET['sort'];
 
+        print_r($books);
+
         if ($sortName !== null) {
             if (substr_count($sortName, 'Descending') > 0) {
                 $books = array_reverse($books);
