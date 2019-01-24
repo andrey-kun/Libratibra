@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: andrey-kun
@@ -10,17 +11,27 @@ namespace App\Model;
 
 class Book extends Content
 {
-    public $authorId;
-    public $genresId;
+    public $author_id;
+    public $genre_id;
     public $rating;
-
-    public static function insert($model_fields)
-    {
-        return parent::insert($model_fields);
-    }
 
     protected static function getTableName()
     {
         return "books";
+    }
+
+    public function update($model_fields)
+    {
+        $database = static::getDB();
+
+        $model_fields['id'] = $this->id;
+        foreach ($model_fields as $field => $value) {
+            $this->$field = $value;
+        }
+
+        $statement = $database->prepare("UPDATE " . static::getTableName()
+            . " SET name=:name, rating=:rating, author_id=:author_id, genre_id=:genre_id"
+            . " WHERE id=:id");
+        $statement->execute($model_fields);
     }
 }

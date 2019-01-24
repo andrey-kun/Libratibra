@@ -1,27 +1,26 @@
-{% extends "Base.html" %}
-
-{% block title %}{{ title }} — {{ projectName }}{% endblock %}
-
-{% block head %}
-{% endblock %}
-
-{% block body %}
-
-{% if message is not null %}
-<div class="content">
-    <h1>{{ message }}</h1>
-</div>
-{% endif %}
-
-<div class="content">
-    <a class="backLink" href="/">◀ На главную</a>
-    {% if content is not null %}
-    <h1>{{ caption }}</h1>
-    <form action="{{ actionUrl }}">
-        <input name="newName" placeholder="Имя" type="text">
-        <button type="submit">Изменить</button>
-    </form>
-    {% endif %}
-</div>
-
-{% endblock %}
+Автор:
+<select name="author_id">
+    {% for author in authors %}
+    {% if author.id == content.author_id %}
+    <option selected value="{{ author.id }}">
+        {% else %}
+    <option value="{{ author.id }}">
+        {% endif %}
+        {{ author.name }} ★{{ author.rating}}
+    </option>
+    {% endfor %}
+</select>
+Рейтинг:
+<input type="number" name="rating" min="1" max="5" step="0.1" value="{{ content.rating }}">
+Жанр:
+<select name="genre_id">
+    {% for genre in genres %}
+    {% if genre.id == content.genre_id %}
+    <option value="{{ genre.id }}" selected>
+        {% else %}
+    <option value="{{ genre.id }}">
+        {% endif %}
+        {{ genre.name }}
+    </option>
+    {% endfor %}
+</select>
