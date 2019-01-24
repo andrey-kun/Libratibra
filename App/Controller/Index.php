@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: andrey-kun
@@ -12,9 +13,10 @@ use App\Config;
 use App\Model\Author;
 use App\Model\Book;
 use App\Model\Genre;
+use Core\Controller;
 use Core\View;
 
-class Index extends \Core\Controller
+class Index extends Controller
 {
     public function indexAction()
     {
@@ -22,9 +24,11 @@ class Index extends \Core\Controller
         $authors = Author::getAll();
         $genres = Genre::getAll();
 
-        $sortName = @$_GET['sort'];
-
-        print_r($books);
+        if (isset($_GET['sort'])) {
+            $sortName = $_GET['sort'];
+        } else {
+            $sortName = null;
+        }
 
         if ($sortName !== null) {
             if (substr_count($sortName, 'Descending') > 0) {
