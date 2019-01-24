@@ -18,9 +18,9 @@
     {% if content is not null %}
     <h1>{{ caption }}</h1>
     <form action="{{ actionUrl }}">
-        <input name="newName" placeholder="Имя" type="text">
+        <input name="name" placeholder="Имя" type="text" value="{{ content.name }}">
         {% if templateLinks is not null %}
-        {% include templateLinks.addFields %}
+        {% include templateLinks.editFields %}
         {% endif %}
         <button type="submit">Изменить</button>
     </form>

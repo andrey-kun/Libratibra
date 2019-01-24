@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: andrey-kun
@@ -9,36 +10,22 @@
 namespace App\Controller;
 
 use App\Config;
+use App\ReiterationException;
+use App\Util;
+use Core\Controller;
+use Core\View;
 
-class Book extends Content
+class Book extends Controller
 {
-    public static function getModel()
-    {
-        return \App\Model\Book::class;
-    }
-
-    public static function getActionUrl()
-    {
-        return "/book";
-    }
-
-    public static function getTemplateLinks()
-    {
-        $templateNames = [
-            'addFields' => 'content/book/AddFields.html',
-            'editFields' => 'content/book/EditFields.html',
-        ];
-        return $templateNames;
-    }
+    private const ACTION_URL = "/book";
 
     public function addAction()
     {
-        $author_id = @$_GET['author_id'];
-        $genre_id = @$_GET['genre_id'];
-        $rating = @$_GET['rating'];
+        $content = $message = null;
+        $values = Util::getValuesFromGet('name', 'rating', 'author_id', 'genre_id');
+
         $authors = \App\Model\Author::getAll();
         $genres = \App\Model\Genre::getAll();
-        $message = null;
 
         if (empty($authors) && empty($genres)) {
             $message = $this->getMessage('listAuthorsGenresEmpty');
@@ -48,19 +35,28 @@ class Book extends Content
             $message = $this->getMessage('listGenresEmpty');
         }
 
-        if ($message === null
-            && $author_id !== null
-            && $genre_id !== null
-            && $rating !== null) {
-            $model_params = [
-                'author_id' => $author_id,
-                'genre_id' => $genre_id,
-                'rating' => $rating,
-            ];
-            parent::insert($model_params);
-        } else {
-            parent::insert(null);
+        if (!Util::isExistsEmptyValues($values)) {
+            try {
+                $content = \App\Model\Book::insert($values);
+                $message = static::getMessage('addSuccess', $values['name']);
+            } catch (ReiterationException $exception) {
+                $message = static::getMessage('alreadyExists', $values['name']);
+            }
         }
+
+        $template_params = [
+            'actionUrl' => self::ACTION_URL . '/add',
+            'authors' => $authors,
+            'caption' => static::getMessage('addTitle'),
+            'content' => $content,
+            'genres' => $genres,
+            'message' => $message,
+            'projectName' => Config::PROJECT_NAME,
+            'templateLinks' => static::getTemplateLinks(),
+            'title' => static::getMessage('addTitle'),
+        ];
+
+        View::renderTemplate('content/Add.html', $template_params);
     }
 
     public function getMessage($id, ...$args)
@@ -74,58 +70,99 @@ class Book extends Content
             'deleteCaption' => "Удалить книгу «%s»?",
             'editTitle' => "Редактирование книги…",
             'editCaption' => "Редактирование книги «%s»…",
+            'editSuccess' => "Книга «%s» обновлена",
             'listAuthorsEmpty' => 'Список авторов пуст!',
             'listAuthorsGenresEmpty' => 'Списки авторов и жанров пусты!',
             'listGenresEmpty' => 'Список жанров пуст!',
-            'matchingNames' => "Вы дали книге «%s» такое же имя!",
             'missingId' => "Книги с ID %d не существует, свяжитесь с администратором.",
             'renameSuccess' => "Книга «%s» переименована в «%s»",
         ];
         return vsprintf($messages[$id], $args);
     }
 
-    public function renderTemplate($path, $params)
+    public static function getTemplateLinks()
     {
-        $bookParams = [
-            'authors' => \App\Model\Author::getAll(),
-            'genres' => \App\Model\Genre::getAll(),
+        $links = [
+            'addFields' => 'content/book/AddFields.html',
+            'editFields' => 'content/book/EditFields.html',
         ];
-        $updParams = array_merge($bookParams, $params);
-        parent::renderTemplate($path, $updParams);
+        return $links;
     }
 
     public function deleteAction()
     {
-        parent::delete();
+        if (isset($this->route_params['id'])) {
+            $id = $this->route_params['id'];
+        } else {
+            $id = null;
+        }
+
+        $message = null;
+        $is_agree = isset($_GET['agree']);
+
+        $content = \App\Model\Book::getById($id);
+
+        if ($content === null) {
+            $message = static::getMessage('missingId', $id);
+        } elseif ($is_agree) {
+            $message = static::getMessage('deleteSuccess', $content->name);
+            $content->remove();
+        }
+
+
+        $template_params = [
+            'actionUrl' => self::ACTION_URL . '/delete/' . $id,
+            'caption' => (isset($content)) ? static::getMessage('deleteCaption', $content->name) : null,
+            'content' => $content,
+            'message' => $message,
+            'projectName' => Config::PROJECT_NAME,
+            'templateLinks' => static::getTemplateLinks(),
+            'title' => static::getMessage('deleteTitle'),
+        ];
+
+        View::renderTemplate('content/Delete.html', $template_params);
     }
 
     public function editAction()
     {
-        $author_id = @$_GET['author_id'];
-        $genre_id = @$_GET['genre_id'];
+        if (isset($this->route_params['id'])) {
+            $id = $this->route_params['id'];
+        } else {
+            $id = null;
+        }
+        $message = null;
+        $values = Util::getValuesFromGet('name', 'rating', 'author_id', 'genre_id');
+
+        $content = \App\Model\Book::getById($id);
+
         $authors = \App\Model\Author::getAll();
         $genres = \App\Model\Genre::getAll();
-        $message = null;
 
-        if ($message === null
-            && $author_id !== null
-            && $genre_id !== null) {
-            $model_params = [
-                'author_id' => $author_id,
-                'genre_id' => $genre_id,
-            ];
-            parent::update($model_params);
-        } else {
-            if ($message !== null) {
-                $templateParams = [
-                    'message' => $message,
-                    'projectName' => Config::PROJECT_NAME,
-                    'title' => static::getMessage('editTitle'),
-                ];
-                $this->renderTemplate('content/Edit.html', $templateParams);
+        if ($content === null) {
+            $message = static::getMessage('missingId', $id);
+        } elseif (!Util::isExistsEmptyValues($values)) {
+            if (\App\Model\Book::isNameExists($values['name']) && $content->name !== $values['name']) {
+                $message = static::getMessage('alreadyExists', $values['name']);
             } else {
-                parent::update(null);
+                $message = static::getMessage('editSuccess', $content->name, $values['name']);
+                $content->update($values);
             }
         }
+
+        $template_params = [
+            'actionUrl' => self::ACTION_URL . '/edit/' . $id,
+            'authors' => $authors,
+            'caption' => (isset($content)) ? static::getMessage('editCaption', $content->name) : null,
+            'content' => $content,
+            'genres' => $genres,
+            'message' => $message,
+            'projectName' => Config::PROJECT_NAME,
+            'templateLinks' => static::getTemplateLinks(),
+            'title' => static::getMessage('editTitle'),
+        ];
+
+        View::renderTemplate('content/Edit.html', $template_params);
     }
+
+
 }
