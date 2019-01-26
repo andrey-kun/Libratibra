@@ -1,5 +1,6 @@
 Автор:
 <select name="author_id">
+    <option value="0">Аноним</option>
     {% for author in authors %}
     {% if author.id == content.author_id %}
     <option selected value="{{ author.id }}">
@@ -14,6 +15,7 @@
 <input type="number" name="rating" min="1" max="5" step="0.1" value="{{ content.rating }}">
 Жанр:
 <select name="genre_id">
+    <option value="0">Неопределён</option>
     {% for genre in genres %}
     {% if genre.id == content.genre_id %}
     <option value="{{ genre.id }}" selected>

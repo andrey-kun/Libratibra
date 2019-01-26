@@ -1,5 +1,6 @@
 Автор:
 <select name="author_id">
+    <option value="0">Аноним</option>
     {% for author in authors %}
     <option value="{{ author.id }}">{{ author.name }} ★{{ author.rating}}</option>
     {% endfor %}
@@ -8,6 +9,7 @@
 <input type="number" name="rating" min="1" max="5" step="0.1">
 Жанр:
 <select name="genre_id">
+    <option value="0">Неопределён</option>
     {% for genre in genres %}
     <option value="{{ genre.id }}">{{ genre.name }}</option>
     {% endfor %}

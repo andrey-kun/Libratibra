@@ -39,9 +39,18 @@
         <tr>
             <td>{{ book.name }}</td>
             <td>★ {{ book.rating }}</td>
+            {% if authors[book.author_id] is not null %}
             <td>{{ authors[book.author_id].name }}</td>
             <td>★ {{ authors[book.author_id].rating }}</td>
+            {% else %}
+            <td>Аноним</td>
+            <td></td>
+            {% endif %}
+            {% if genres[book.genre_id] is not null %}
             <td>{{ genres[book.genre_id].name }}</td>
+            {% else %}
+            <td>—</td>
+            {% endif %}
             <td>
                 <a href="/book/edit/{{ book.id }}">🖉 Редактировать</a>
                 <a href="/book/delete/{{ book.id }}">❌ Удалить</a>
