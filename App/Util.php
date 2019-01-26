@@ -11,7 +11,7 @@ namespace App;
 
 class Util
 {
-    public static function getValues($from_array, $values_names)
+    public static function getValues(array $from_array, array $values_names)
     {
         $values = [];
         foreach ($values_names as $value_name) {

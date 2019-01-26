@@ -48,7 +48,7 @@ class Author extends Controller
     public function addAction()
     {
         $content = $message = null;
-        $values = Util::getValues($_GET, 'name');
+        $values = $_GET;
 
         if (!Util::isExistsEmptyValues($values)) {
             try {
