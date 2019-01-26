@@ -110,7 +110,7 @@ abstract class Model
         $this->isRemoved = true;
     }
 
-    public function update($values)
+    public function update(?array $values)
     {
         $database = static::getDB();
 

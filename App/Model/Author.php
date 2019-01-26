@@ -24,7 +24,7 @@ class Author extends Content
         return "authors";
     }
 
-    public function update($values)
+    public function update(?array $values)
     {
         $database = static::getDB();
         $statement = $database->prepare("SELECT COUNT(name) FROM books WHERE author_id=?");

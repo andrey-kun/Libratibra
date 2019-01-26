@@ -30,17 +30,19 @@ class Book extends Content
         $book = parent::insert($values);
 
         $book_author = Author::getById($book->author_id);
-        $book_author->update(null);
+
+        if ($book_author !== null) $book_author->update(null);
 
         return $book;
     }
 
     public function remove()
     {
+        $book_author = Author::getById($this->author_id);
+
         parent::remove();
 
-        $book_author = Author::getById($this->author_id);
-        $book_author->update(null);
+        if ($book_author !== null) $book_author->update(null);
     }
 
     public static function getByAuthor($author_id)
@@ -58,6 +60,6 @@ class Book extends Content
         parent::update($values);
 
         $book_author = Author::getById($this->author_id);
-        $book_author->update(null);
+        if ($book_author !== null) $book_author->update(null);
     }
 }
