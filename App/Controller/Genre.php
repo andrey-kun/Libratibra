@@ -19,30 +19,6 @@ class Genre extends Controller
 {
     private const ACTION_URL = "/genre";
 
-    public function getMessage($id, ...$args)
-    {
-        $messages = [
-            'addSuccess' => "Жанр «%s» успешно добавлен.",
-            'addTitle' => "Добавление жанра…",
-            'alreadyExists' => "Жанр «%s» уже существует!",
-            'deleteSuccess' => "Жанр «%s» удалён",
-            'deleteTitle' => "Удаление жанра",
-            'deleteCaption' => "Удалить жанр «%s»?",
-            'editTitle' => "Редактирование жанра…",
-            'editCaption' => "Редактирование жанра «%s»…",
-            'editSuccess' => "Жанр «%s» обновлён",
-            'listGenresEmpty' => 'Список жанров пуст!',
-            'missingId' => "Жанра с ID %d не существует, свяжитесь с администратором.",
-            'renameSuccess' => "Жанр «%s» переименован в «%s»",
-        ];
-        return vsprintf($messages[$id], $args);
-    }
-
-    public static function getTemplateLinks()
-    {
-        return null;
-    }
-
     public function addAction()
     {
         $content = $message = null;
@@ -70,6 +46,32 @@ class Genre extends Controller
         View::renderTemplate('content/Add.html', $template_params);
     }
 
+    public function getMessage($id, ...$args)
+    {
+        $messages = [
+            'addSuccess' => "Жанр «%s» успешно добавлен.",
+            'addTitle' => "Добавление жанра…",
+            'alreadyExists' => "Жанр «%s» уже существует!",
+            'deleteSuccess' => "Жанр «%s» удалён",
+            'deleteTitle' => "Удаление жанра",
+            'deleteCaption' => "Удалить жанр «%s»?",
+            'deleteGenreFromBooks' => "Внимание! Есть книги с этим жанром (%s), в случае удаления жанра эти книги будут
+             с неопределённым жанром!",
+            'editTitle' => "Редактирование жанра…",
+            'editCaption' => "Редактирование жанра «%s»…",
+            'editSuccess' => "Жанр «%s» обновлён",
+            'listGenresEmpty' => 'Список жанров пуст!',
+            'missingId' => "Жанра с ID %d не существует, свяжитесь с администратором.",
+            'renameSuccess' => "Жанр «%s» переименован в «%s»",
+        ];
+        return vsprintf($messages[$id], $args);
+    }
+
+    public static function getTemplateLinks()
+    {
+        return null;
+    }
+
     public function deleteAction()
     {
         if (isset($this->route_params['id'])) {
@@ -78,10 +80,21 @@ class Genre extends Controller
             $id = null;
         }
 
+        $related_books = \App\Model\Book::getByGenre($id);
+
         $message = null;
         $is_agree = isset($_GET['agree']);
 
         $content = \App\Model\Genre::getById($id);
+
+        if ($related_books !== null) {
+            $book_names = "";
+            foreach ($related_books as $book) {
+                $book_names .= "«{$book->name}», ";
+            }
+            $book_names = substr($book_names, 0, -2);
+            $message = static::getMessage('deleteGenreFromBooks', $book_names);
+        }
 
         if ($content === null) {
             $message = static::getMessage('missingId', $id);

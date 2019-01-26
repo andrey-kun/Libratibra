@@ -11,7 +11,8 @@
     <a class="backLink" href="/">◀ На главную</a>
     {% if message is not null %}
     <h1>{{ message }}</h1>
-    {% else %}
+    {% endif %}
+    {% if content is not null and not content.isRemoved %}
     <h1>{{ caption }}</h1>
     <form action="{{ actionUrl }}">
         <button name="agree" type="submit">Подтвердить удаление</button>

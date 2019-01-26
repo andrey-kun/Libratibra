@@ -14,7 +14,7 @@ use PDO;
 abstract class Model
 {
     public $id;
-    protected $isRemoved = false;
+    public $isRemoved = false;
 
     protected abstract static function getTableName();
 
@@ -43,6 +43,29 @@ abstract class Model
         }
 
         return new static($id, $found_models[0]);
+    }
+
+    public static function getByColumn($column_name, $value)
+    {
+        $database = static::getDB();
+
+        $statement = $database->prepare("SELECT * FROM " . static::getTableName()
+            . " WHERE ($column_name=:value)");
+        $statement->bindParam(":value", $value);
+        $statement->execute();
+        $found_models = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($found_models === null || empty($found_models)) {
+            return null;
+        }
+
+        $models = [];
+
+        foreach ($found_models as $model_param) {
+            $models[] = new static($model_param['id'], $model_param);
+        }
+
+        return $models;
     }
 
     protected static function getDB()

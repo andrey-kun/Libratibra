@@ -20,6 +20,11 @@ class Book extends Content
         return "books";
     }
 
+    public static function getByGenre($genre_id)
+    {
+        return parent::getByColumn('genre_id', $genre_id);
+    }
+
     public function update($model_fields)
     {
         $database = static::getDB();
