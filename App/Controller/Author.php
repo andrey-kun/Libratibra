@@ -48,7 +48,7 @@ class Author extends Controller
     public function addAction()
     {
         $content = $message = null;
-        $values = Util::getValuesFromGet('name');
+        $values = Util::getValues($_GET, 'name');
 
         if (!Util::isExistsEmptyValues($values)) {
             try {
@@ -126,7 +126,7 @@ class Author extends Controller
         }
 
         $message = null;
-        $values = Util::getValuesFromGet('name');
+        $values = $_GET;
 
         $content = \App\Model\Author::getById($id);
 

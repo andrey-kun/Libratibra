@@ -15,9 +15,32 @@ class Book extends Content
     public $genre_id;
     public $rating;
 
+    protected static function getRowNames()
+    {
+        return ['id', 'name', 'rating', 'author_id', 'genre_id'];
+    }
+
     protected static function getTableName()
     {
         return "books";
+    }
+
+    public static function insert($values): object
+    {
+        $book = parent::insert($values);
+
+        $book_author = Author::getById($book->author_id);
+        $book_author->update(null);
+
+        return $book;
+    }
+
+    public function remove()
+    {
+        parent::remove();
+
+        $book_author = Author::getById($this->author_id);
+        $book_author->update(null);
     }
 
     public static function getByAuthor($author_id)
@@ -30,18 +53,11 @@ class Book extends Content
         return parent::getByColumn('genre_id', $genre_id);
     }
 
-    public function update($model_fields)
+    public function update($values)
     {
-        $database = static::getDB();
+        parent::update($values);
 
-        $model_fields['id'] = $this->id;
-        foreach ($model_fields as $field => $value) {
-            $this->$field = $value;
-        }
-
-        $statement = $database->prepare("UPDATE " . static::getTableName()
-            . " SET name=:name, rating=:rating, author_id=:author_id, genre_id=:genre_id"
-            . " WHERE id=:id");
-        $statement->execute($model_fields);
+        $book_author = Author::getById($this->author_id);
+        $book_author->update(null);
     }
 }

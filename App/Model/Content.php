@@ -19,7 +19,7 @@ abstract class Content extends Model
 {
     public $name;
 
-    public static function insert($values)
+    public static function insert($values): object
     {
         if (static::isNameExists($values['name'])) {
             throw new ReiterationException();

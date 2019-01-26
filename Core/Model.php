@@ -9,12 +9,15 @@
 namespace Core;
 
 use App\Config;
+use App\Util;
 use PDO;
 
 abstract class Model
 {
     public $id;
     public $isRemoved = false;
+
+    protected abstract static function getRowNames();
 
     protected abstract static function getTableName();
 
@@ -42,7 +45,8 @@ abstract class Model
             return null;
         }
 
-        return new static($id, $found_models[0]);
+        $found_models[0]['id'] = $id;
+        return new static($found_models[0]);
     }
 
     public static function getByColumn($column_name, $value)
@@ -62,7 +66,7 @@ abstract class Model
         $models = [];
 
         foreach ($found_models as $model_param) {
-            $models[] = new static($model_param['id'], $model_param);
+            $models[] = new static($model_param);
         }
 
         return $models;
@@ -79,7 +83,7 @@ abstract class Model
         return $db;
     }
 
-    public static function insert($values)
+    public static function insert($values): object
     {
         $database = static::getDB();
 
@@ -90,7 +94,7 @@ abstract class Model
         $statement->execute(array_combine(explode(',', $bind), array_values($values)));
 
         $values['id'] = $database->lastInsertId();
-        return $values;
+        return new static($values);
     }
 
     public function remove()
@@ -106,11 +110,40 @@ abstract class Model
         $this->isRemoved = true;
     }
 
-    protected function __construct($id, array $model_fields)
+    public function update($values)
     {
-        $this->id = $id;
+        $database = static::getDB();
+
+        $values['id'] = $this->id;
+
+        foreach (static::getRowNames() as $row_name) {
+            if (isset($values[$row_name])) {
+                // TODO: Replace variable variable, bad code style
+                $this->$row_name = $values[$row_name];
+            }
+        }
+
+        $statement = $database->prepare("UPDATE " . static::getTableName()
+            . " SET " . self::pdoSet(static::getRowNames(), $values)
+            . " WHERE id=:id");
+        $statement->execute(Util::getValues($values, static::getRowNames()));
+    }
+
+    protected function __construct(array $model_fields)
+    {
         foreach ($model_fields as $field => $value) {
             $this->$field = $value;
         }
+    }
+
+    private static function pdoSet($allowed, $source)
+    {
+        $set = '';
+        foreach ($allowed as $field) {
+            if (isset($source[$field])) {
+                $set .= "`" . str_replace("`", "``", $field) . "`" . "=:$field, ";
+            }
+        }
+        return substr($set, 0, -2);
     }
 }

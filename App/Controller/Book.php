@@ -22,7 +22,7 @@ class Book extends Controller
     public function addAction()
     {
         $content = $message = null;
-        $values = Util::getValuesFromGet('name', 'rating', 'author_id', 'genre_id');
+        $values = $_GET;
 
         $authors = \App\Model\Author::getAll();
         $genres = \App\Model\Genre::getAll();
@@ -131,7 +131,7 @@ class Book extends Controller
             $id = null;
         }
         $message = null;
-        $values = Util::getValuesFromGet('name', 'rating', 'author_id', 'genre_id');
+        $values = $_GET;
 
         $content = \App\Model\Book::getById($id);
 

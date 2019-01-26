@@ -11,23 +11,30 @@ namespace App\Model;
 
 class Author extends Content
 {
+    public $rating;
+    public $number_books;
+
+    protected static function getRowNames()
+    {
+        return ['id', 'name', 'rating', 'number_books'];
+    }
+
     protected static function getTableName()
     {
         return "authors";
     }
 
-    public function update($model_fields)
+    public function update($values)
     {
         $database = static::getDB();
+        $statement = $database->prepare("SELECT COUNT(name) FROM books WHERE author_id=?");
+        $statement->execute([$this->id]);
+        $values['number_books'] = $statement->fetchColumn();
 
-        $model_fields['id'] = $this->id;
-        foreach ($model_fields as $field => $value) {
-            $this->$field = $value;
-        }
+        $statement = $database->prepare("SELECT AVG(rating) FROM books WHERE author_id=?");
+        $statement->execute([$this->id]);
+        $values['rating'] = $statement->fetchColumn();
 
-        $statement = $database->prepare("UPDATE " . static::getTableName()
-            . " SET name=:name"
-            . " WHERE id=:id");
-        $statement->execute($model_fields);
+        parent::update($values);
     }
 }

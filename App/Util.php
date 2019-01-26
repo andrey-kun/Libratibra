@@ -11,12 +11,12 @@ namespace App;
 
 class Util
 {
-    public static function getValuesFromGet(...$values_names)
+    public static function getValues($from_array, $values_names)
     {
         $values = [];
         foreach ($values_names as $value_name) {
-            if (isset($_GET[$value_name])) {
-                $values[$value_name] = $_GET[$value_name];
+            if (isset($from_array[$value_name])) {
+                $values[$value_name] = $from_array[$value_name];
             } else {
                 $values[$value_name] = "";
             }

@@ -22,7 +22,7 @@ class Genre extends Controller
     public function addAction()
     {
         $content = $message = null;
-        $values = Util::getValuesFromGet('name');
+        $values = $_GET;
 
         if (!Util::isExistsEmptyValues($values)) {
             try {
@@ -126,7 +126,7 @@ class Genre extends Controller
         }
 
         $message = null;
-        $values = Util::getValuesFromGet('name');
+        $values = $_GET;;
 
         $content = \App\Model\Genre::getById($id);
 
