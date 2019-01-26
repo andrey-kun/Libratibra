@@ -28,6 +28,8 @@ class Author extends Controller
             'deleteSuccess' => "Автор «%s» удалён",
             'deleteTitle' => "Удаление автора",
             'deleteCaption' => "Удалить автора «%s»?",
+            'deleteGenreFromBooks' => "Внимание! Есть книги с этим автором (%s), в случае удаления автора эти книги
+             будут без автора!",
             'editTitle' => "Редактирование автора…",
             'editCaption' => "Редактирование автора «%s»…",
             'editSuccess' => "Автор «%s» обновлён",
@@ -82,6 +84,17 @@ class Author extends Controller
         $is_agree = isset($_GET['agree']);
 
         $content = \App\Model\Author::getById($id);
+
+        $related_books = \App\Model\Book::getByAuthor($id);
+
+        if ($related_books !== null) {
+            $book_names = "";
+            foreach ($related_books as $book) {
+                $book_names .= "«{$book->name}», ";
+            }
+            $book_names = substr($book_names, 0, -2);
+            $message = static::getMessage('deleteGenreFromBooks', $book_names);
+        }
 
         if ($content === null) {
             $message = static::getMessage('missingId', $id);
