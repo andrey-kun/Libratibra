@@ -41,7 +41,7 @@
             <td>★ {{ book.rating }}</td>
             {% if authors[book.author_id] is not null %}
             <td>{{ authors[book.author_id].name }}</td>
-            <td>★ {{ authors[book.author_id].rating }}</td>
+            <td>★ {{ authors[book.author_id].rating|number_format(1, ',', '') }}</td>
             {% else %}
             <td>Аноним</td>
             <td></td>
@@ -91,8 +91,8 @@
         {% for author in authors %}
         <tr>
             <td>{{ author.name }}</td>
-            <td>★ {{ author.rating }}</td>
-            <td>N/A</td>
+            <td>★ {{ author.rating|number_format(1, ',', '') }}</td>
+            <td>{{ author.number_books }}</td>
             <td>
                 <a href="/author/edit/{{ author.id }}">🖉 Редактировать</a>
                 <a href="/author/delete/{{ author.id }}">❌ Удалить</a>

@@ -7,7 +7,7 @@
         {% else %}
     <option value="{{ author.id }}">
         {% endif %}
-        {{ author.name }} ★{{ author.rating}}
+        {{ author.name }} ★{{ author.rating|number_format(1, ',', '') }}
     </option>
     {% endfor %}
 </select>
