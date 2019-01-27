@@ -2,7 +2,7 @@
 <select name="author_id">
     <option value="0">Аноним</option>
     {% for author in authors %}
-    <option value="{{ author.id }}">{{ author.name }} ★{{ author.rating|number_format(1, ',', '') }}</option>
+        <option value="{{ author.id }}">{{ author.name }} ★{{ author.rating|number_format(1, ',', '') }}</option>
     {% endfor %}
 </select>
 Рейтинг:
@@ -11,6 +11,6 @@
 <select name="genre_id">
     <option value="0">Неопределён</option>
     {% for genre in genres %}
-    <option value="{{ genre.id }}">{{ genre.name }}</option>
+        <option value="{{ genre.id }}">{{ genre.name }}</option>
     {% endfor %}
 </select>

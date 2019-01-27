@@ -2,13 +2,13 @@
 <select name="author_id">
     <option value="0">Аноним</option>
     {% for author in authors %}
-    {% if author.id == content.author_id %}
-    <option selected value="{{ author.id }}">
+        {% if author.id == content.author_id %}
+        <option selected value="{{ author.id }}">
         {% else %}
-    <option value="{{ author.id }}">
+            <option value="{{ author.id }}">
         {% endif %}
         {{ author.name }} ★{{ author.rating|number_format(1, ',', '') }}
-    </option>
+        </option>
     {% endfor %}
 </select>
 Рейтинг:
@@ -17,12 +17,12 @@
 <select name="genre_id">
     <option value="0">Неопределён</option>
     {% for genre in genres %}
-    {% if genre.id == content.genre_id %}
-    <option value="{{ genre.id }}" selected>
+        {% if genre.id == content.genre_id %}
+        <option value="{{ genre.id }}" selected>
         {% else %}
-    <option value="{{ genre.id }}">
+            <option value="{{ genre.id }}">
         {% endif %}
         {{ genre.name }}
-    </option>
+        </option>
     {% endfor %}
 </select>

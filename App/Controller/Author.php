@@ -19,32 +19,6 @@ class Author extends Controller
 {
     private const ACTION_URL = "/author";
 
-    public function getMessage($id, ...$args)
-    {
-        $messages = [
-            'addSuccess' => "Автор «%s» успешно добавлен.",
-            'addTitle' => "Добавление автора…",
-            'alreadyExists' => "Автор «%s» уже существует!",
-            'deleteSuccess' => "Автор «%s» удалён",
-            'deleteTitle' => "Удаление автора",
-            'deleteCaption' => "Удалить автора «%s»?",
-            'deleteGenreFromBooks' => "Внимание! Есть книги с этим автором (%s), в случае удаления автора эти книги
-             будут без автора!",
-            'editTitle' => "Редактирование автора…",
-            'editCaption' => "Редактирование автора «%s»…",
-            'editSuccess' => "Автор «%s» обновлён",
-            'listAuthorEmpty' => 'Список авторов пуст!',
-            'missingId' => "Автора с ID %d не существует, свяжитесь с администратором.",
-            'renameSuccess' => "Автор «%s» переименован в «%s»",
-        ];
-        return vsprintf($messages[$id], $args);
-    }
-
-    public static function getTemplateLinks()
-    {
-        return null;
-    }
-
     public function addAction()
     {
         $content = $message = null;
@@ -70,6 +44,32 @@ class Author extends Controller
         ];
 
         View::renderTemplate('content/Add.html', $template_params);
+    }
+
+    public function getMessage($id, ...$args)
+    {
+        $messages = [
+            'addSuccess' => "Автор «%s» успешно добавлен.",
+            'addTitle' => "Добавление автора…",
+            'alreadyExists' => "Автор «%s» уже существует!",
+            'deleteSuccess' => "Автор «%s» удалён",
+            'deleteTitle' => "Удаление автора",
+            'deleteCaption' => "Удалить автора «%s»?",
+            'deleteGenreFromBooks' => "Внимание! Есть книги с этим автором (%s), в случае удаления автора эти книги
+             будут без автора!",
+            'editTitle' => "Редактирование автора…",
+            'editCaption' => "Редактирование автора «%s»…",
+            'editSuccess' => "Автор «%s» обновлён",
+            'listAuthorEmpty' => 'Список авторов пуст!',
+            'missingId' => "Автора с ID %d не существует, свяжитесь с администратором.",
+            'renameSuccess' => "Автор «%s» переименован в «%s»",
+        ];
+        return vsprintf($messages[$id], $args);
+    }
+
+    public static function getTemplateLinks()
+    {
+        return null;
     }
 
     public function deleteAction()

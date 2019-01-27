@@ -7,24 +7,24 @@
 
 {% block body %}
 
-{% if message is not null %}
-<div class="content">
-    <h1>{{ message }}</h1>
-</div>
-{% endif %}
-
-<div class="content">
-    <a class="backLink" href="/">◀ На главную</a>
-    {% if content is not null %}
-    <h1>{{ caption }}</h1>
-    <form action="{{ actionUrl }}">
-        <input name="name" placeholder="Имя" type="text" value="{{ content.name }}">
-        {% if templateLinks is not null %}
-        {% include templateLinks.editFields %}
-        {% endif %}
-        <button type="submit">Изменить</button>
-    </form>
+    {% if message is not null %}
+        <div class="content">
+            <h1>{{ message }}</h1>
+        </div>
     {% endif %}
-</div>
+
+    <div class="content">
+        <a class="backLink" href="/">◀ На главную</a>
+        {% if content is not null %}
+            <h1>{{ caption }}</h1>
+            <form action="{{ actionUrl }}">
+                <input name="name" placeholder="Имя" type="text" value="{{ content.name }}">
+                {% if templateLinks is not null %}
+                    {% include templateLinks.editFields %}
+                {% endif %}
+                <button type="submit">Изменить</button>
+            </form>
+        {% endif %}
+    </div>
 
 {% endblock %}
