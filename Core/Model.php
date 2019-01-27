@@ -63,13 +63,7 @@ abstract class Model
             return null;
         }
 
-        $models = [];
-
-        foreach ($found_models as $model_param) {
-            $models[] = new static($model_param);
-        }
-
-        return $models;
+        return $found_models;
     }
 
     public static function getByContent($content)

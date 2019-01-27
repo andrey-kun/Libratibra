@@ -38,6 +38,23 @@ class Book extends Content
         return parent::getByColumn('genre_id', $genre_id);
     }
 
+    public static function getByContent($content)
+    {
+        $books = [];
+
+        foreach (Author::getByContent($content) as $author) {
+            $books = array_merge($books, self::getByAuthor($author['id']));
+        }
+
+        foreach (Genre::getByContent($content) as $genre) {
+            $books = array_merge($books, self::getByGenre($genre['id']));
+        }
+
+        $books = array_merge($books, parent::getByContent($content));
+
+        return $books;
+    }
+
     public static function arraySort(&$models, $sort_name, $callback_func = null, $authors = null, $genres = null)
     {
         if ($callback_func !== null) {
