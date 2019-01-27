@@ -2,7 +2,7 @@
 <select name="author_id">
     <option value="0">Аноним</option>
     {% for author in authors %}
-        <option value="{{ author.id }}">{{ author.name }} ★{{ author.rating|number_format(1, ',', '') }}</option>
+        <option value="{{ author.id }}">{{ author.name }}</option>
     {% endfor %}
 </select>
 Рейтинг:
