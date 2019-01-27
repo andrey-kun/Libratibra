@@ -72,6 +72,20 @@ abstract class Model
         return $models;
     }
 
+    public static function getByContent($content)
+    {
+        $database = static::getDB();
+
+        $statement = $database->prepare("SELECT * FROM " . static::getTableName()
+            . self::pdoSetLike($content));
+        $statement->execute();
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC | PDO::FETCH_GROUP | PDO::FETCH_UNIQUE);
+        foreach ($data as $id => &$content) {
+            $content['id'] = $id;
+        }
+        return $data;
+    }
+
     protected static function getDB()
     {
         static $db = null;
@@ -145,6 +159,12 @@ abstract class Model
             }
         }
         return substr($set, 0, -2);
+    }
+
+    private static function pdoSetLike($source)
+    {
+        $set = " WHERE CONCAT(" . implode(",", static::getRowNames()) . ") LIKE \"%$source%\"";
+        return $set;
     }
 
     protected static function getTypeNameSorted(string $sort_name)

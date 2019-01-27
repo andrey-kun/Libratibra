@@ -16,12 +16,15 @@
     <div class="searchField">
         <form action="/">
             <input type="search" placeholder="Вводите название книги, автора, жанр…" name="search_query"
-                   class="searchField">
+                   class="searchField" value="{{ search_query }}">
             <button type="submit" class="searchField">🔍</button>
         </form>
     </div>
 
     <div class="content">
+        {% if search_query is not null %}
+            <p>Результаты поиска по запросу «{{ search_query }}»</p>
+        {% endif %}
         <table>
             <thead>
             <tr>
@@ -85,7 +88,11 @@
         </table>
 
         {% if (books)|length==0 %}
-            <p>Список книг пуст…</p>
+            {% if search_query is not null %}
+                <p>Книги не найдены…</p>
+            {% else %}
+                <p>Список книг пуст…</p>
+            {% endif %}
         {% endif %}
 
         <p><a href="/book/add">➕ Добавить книгу…</a></p>
@@ -136,7 +143,11 @@
         </table>
 
         {% if (authors)|length==0 %}
-            <p>Список авторов пуст…</p>
+            {% if search_query is not null %}
+                <p>Авторы не найдены…</p>
+            {% else %}
+                <p>Список авторов пуст…</p>
+            {% endif %}
         {% endif %}
 
         <p><a href="/author/add">➕ Добавить автора…</a></p>
@@ -171,7 +182,11 @@
         </table>
 
         {% if (genres)|length==0 %}
-            <p>Список жанров пуст…</p>
+            {% if search_query is not null %}
+                <p>Жанры не найдены…</p>
+            {% else %}
+                <p>Список жанров пуст…</p>
+            {% endif %}
         {% endif %}
 
         <p><a href="/genre/add">➕ Добавить жанр…</a></p>

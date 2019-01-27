@@ -20,11 +20,18 @@ class Index extends Controller
 {
     public function indexAction()
     {
-        $books = Book::getAll();
-        $authors = Author::getAll();
-        $genres = Genre::getAll();
+        $search_query = (isset($_GET['search_query']) && $_GET['search_query'] !== "") ? $_GET['search_query'] : null;
 
-        $search_query = (isset($_GET['search_query'])) ? $_GET['search_query'] : null;
+        if ($search_query !== null) {
+            $books = Book::getByContent($search_query);
+            $authors = Author::getByContent($search_query);
+            $genres = Genre::getByContent($search_query);
+        } else {
+            $books = Book::getAll();
+            $authors = Author::getAll();
+            $genres = Genre::getAll();
+        }
+
         $sorting_authors = (isset($_GET['sorting_authors']))
             ? $_GET['sorting_authors']
             : "author_name_ascending";
