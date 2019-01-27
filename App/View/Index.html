@@ -132,7 +132,11 @@
                 <tr>
                     <td>{{ author.name }}</td>
                     <td>{{ self.printRating(author.rating) }}</td>
-                    <td>{{ author.number_books }}</td>
+                    {% if author.number_books is not null %}
+                        <td>{{ author.number_books }}</td>
+                    {% else %}
+                        <td>—</td>
+                    {% endif %}
                     <td>
                         <a href="/author/edit/{{ author.id }}">🖉 Редактировать</a>
                         <a href="/author/delete/{{ author.id }}">❌ Удалить</a>
