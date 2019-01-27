@@ -9,10 +9,35 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\SortCallback;
+
 class Author extends Content
 {
     public $rating;
     public $number_books;
+
+    public static function arraySort(&$models, $sort_name, $callback_func = null)
+    {
+        if ($callback_func !== null) {
+            parent::arraySort($models, $sort_name, $callback_func);
+            return;
+        }
+
+        switch (static::getTypeNameSorted($sort_name)) {
+            default:
+            case "author_name":
+                $callback_func = SortCallback::getFuncSortByField("name");
+                break;
+            case "author_rating":
+                $callback_func = SortCallback::getFuncSortByField("rating");
+                break;
+            case "author_number_books":
+                $callback_func = SortCallback::getFuncSortByField("number_books");
+                break;
+        }
+
+        parent::arraySort($models, $sort_name, $callback_func);
+    }
 
     protected static function getRowNames()
     {

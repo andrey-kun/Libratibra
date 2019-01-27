@@ -24,23 +24,32 @@ class Index extends Controller
         $authors = Author::getAll();
         $genres = Genre::getAll();
 
-        if (isset($_GET['sort'])) {
-            $sortName = $_GET['sort'];
-        } else {
-            $sortName = null;
-        }
+        $search_query = (isset($_GET['search_query'])) ? $_GET['search_query'] : null;
+        $sorting_authors = (isset($_GET['sorting_authors']))
+            ? $_GET['sorting_authors']
+            : "author_name_ascending";
+        $sorting_books = (isset($_GET['sorting_books']))
+            ? $_GET['sorting_books']
+            : "book_name_ascending";
+        $sorting_genres = (isset($_GET['sorting_genres']))
+            ? $_GET['sorting_genres']
+            : "genre_name_ascending";
 
-        if ($sortName !== null) {
-            if (substr_count($sortName, 'Descending') > 0) {
-                $books = array_reverse($books);
-            }
-        }
+        Author::arraySort($authors, $sorting_authors);
+        Book::arraySort($books, $sorting_books, null, $authors, $genres);
+        Genre::arraySort($genres, $sorting_genres);
 
         View::renderTemplate('Index.html', [
             'projectName' => Config::PROJECT_NAME,
             'books' => $books,
             'authors' => $authors,
-            'genres' => $genres
+            'genres' => $genres,
+            'search_query' => $search_query,
+            'sort_params' => [
+                'sorting_authors' => $sorting_authors,
+                'sorting_books' => $sorting_books,
+                'sorting_genres' => $sorting_genres,
+            ],
         ]);
     }
 }

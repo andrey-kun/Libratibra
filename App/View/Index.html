@@ -1,144 +1,200 @@
 {% extends "Base.html" %}
 
+{# TODO: По какой-то причине _self.genUrl(...) не работает, надо разобраться #}
+{% import _self as self %}
+
 {% block title %}{{ projectName }}{% endblock %}
 
 {% block head %}
 
-<link href="/css/index.css" rel="stylesheet">
+    <link href="/css/index.css" rel="stylesheet">
 
 {% endblock %}
 
 {% block body %}
 
+    <div class="searchField">
+        <form action="/">
+            <input type="search" placeholder="Вводите название книги, автора, жанр…" name="search_query"
+                   class="searchField">
+            <button type="submit" class="searchField">🔍</button>
+        </form>
+    </div>
 
-<div class="searchField">
-    <form action="/">
-        <input type="search" placeholder="Вводите название книги, автора, жанр…" name="searchQuery" class="searchField">
-        <button type="submit" class="searchField">🔍</button>
-    </form>
-</div>
+    <div class="content">
+        <table>
+            <thead>
+            <tr>
+                <th>Название
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_books", "book_name_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_books", "book_name_descending", "▼") }}
+                    </div>
+                </th>
+                <th>Рейтинг книги
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_books", "book_rating_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_books", "book_rating_descending", "▼") }}
+                    </div>
+                </th>
+                <th>Автор
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_books", "author_name_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_books", "author_name_descending", "▼") }}
+                    </div>
+                </th>
+                <th>Рейтинг автора
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_books", "author_rating_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_books", "author_rating_descending", "▼") }}
+                    </div>
+                </th>
+                <th colspan="1">Жанр
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_books", "genre_name_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_books", "genre_name_descending", "▼") }}
+                    </div>
+                </th>
+                <th>Операции</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.name }}</td>
+                    <td>{{ self.printRating(book.rating) }}</td>
+                    {% if authors[book.author_id] is not null %}
+                        <td>{{ authors[book.author_id].name }}</td>
+                        <td>{{ self.printRating(authors[book.author_id].rating) }}</td>
+                    {% else %}
+                        <td>Аноним</td>
+                        <td>{{ self.printRating(0) }}</td>
+                    {% endif %}
+                    {% if genres[book.genre_id] is not null %}
+                        <td>{{ genres[book.genre_id].name }}</td>
+                    {% else %}
+                        <td>—</td>
+                    {% endif %}
+                    <td>
+                        <a href="/book/edit/{{ book.id }}">🖉 Редактировать</a>
+                        <a href="/book/delete/{{ book.id }}">❌ Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
 
-<div class="content">
-    <table>
-        <thead>
-        <tr>
-            <th colspan="2">Название
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th colspan="2">Автор
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th colspan="1">Жанр
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th>Операции</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-        <tr>
-            <td>{{ book.name }}</td>
-            <td>★ {{ book.rating }}</td>
-            {% if authors[book.author_id] is not null %}
-            <td>{{ authors[book.author_id].name }}</td>
-            <td>★ {{ authors[book.author_id].rating|number_format(1, ',', '') }}</td>
-            {% else %}
-            <td>Аноним</td>
-            <td></td>
-            {% endif %}
-            {% if genres[book.genre_id] is not null %}
-            <td>{{ genres[book.genre_id].name }}</td>
-            {% else %}
-            <td>—</td>
-            {% endif %}
-            <td>
-                <a href="/book/edit/{{ book.id }}">🖉 Редактировать</a>
-                <a href="/book/delete/{{ book.id }}">❌ Удалить</a>
-            </td>
-        </tr>
-        {% endfor %}
-        <tbody>
-    </table>
+        {% if (books)|length==0 %}
+            <p>Список книг пуст…</p>
+        {% endif %}
 
-    {% if (books)|length==0 %}
-    <p>Список книг пуст…</p>
-    {% endif %}
+        <p><a href="/book/add">➕ Добавить книгу…</a></p>
+    </div>
 
-    <p><a href="/book/add">➕ Добавить книгу…</a></p>
-</div>
+    <div class="content left">
+        <h1>Авторы</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    Имя
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_authors", "author_name_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_authors", "author_name_descending", "▼") }}
+                    </div>
+                </th>
+                <th>
+                    Рейтинг
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_authors", "author_rating_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_authors", "author_rating_descending", "▼") }}
+                    </div>
+                </th>
+                <th>
+                    Кол-во книг
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_authors", "author_number_books_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_authors", "author_number_books_descending", "▼") }}
+                    </div>
+                </th>
+                <th>Операции</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for author in authors %}
+                <tr>
+                    <td>{{ author.name }}</td>
+                    <td>{{ self.printRating(author.rating) }}</td>
+                    <td>{{ author.number_books }}</td>
+                    <td>
+                        <a href="/author/edit/{{ author.id }}">🖉 Редактировать</a>
+                        <a href="/author/delete/{{ author.id }}">❌ Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
 
-<div class="content left">
-    <h1>Авторы</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>
-                Имя
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th>
-                Рейтинг
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th>
-                Кол-во книг
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th>Операции</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for author in authors %}
-        <tr>
-            <td>{{ author.name }}</td>
-            <td>★ {{ author.rating|number_format(1, ',', '') }}</td>
-            <td>{{ author.number_books }}</td>
-            <td>
-                <a href="/author/edit/{{ author.id }}">🖉 Редактировать</a>
-                <a href="/author/delete/{{ author.id }}">❌ Удалить</a>
-            </td>
-        </tr>
-        {% endfor %}
-        <tbody>
-    </table>
+        {% if (authors)|length==0 %}
+            <p>Список авторов пуст…</p>
+        {% endif %}
 
-    {% if (authors)|length==0 %}
-    <p>Список авторов пуст…</p>
-    {% endif %}
+        <p><a href="/author/add">➕ Добавить автора…</a></p>
+    </div>
 
-    <p><a href="/author/add">➕ Добавить автора…</a></p>
-</div>
+    <div class="content right">
+        <h1>Жанры</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    Имя жанра
+                    <div class="panelSort">
+                        {{ self.genSortUrl(_context, "sorting_genres", "genre_name_ascending", "▲") }}
+                        {{ self.genSortUrl(_context, "sorting_genres", "genre_name_descending", "▼") }}
+                    </div>
+                </th>
+                <th>Операции</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for genre in genres %}
+                <tr>
+                    <td>{{ genre.name }}</td>
+                    <td>
+                        <a href="/genre/edit/{{ genre.id }}">🖉 Редактировать</a>
+                        <a href="/genre/delete/{{ genre.id }}">❌ Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
 
-<div class="content right">
-    <h1>Жанры</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>
-                Имя жанра
-                <div class="panelSort">▼ ▲</div>
-            </th>
-            <th>Операции</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for genre in genres %}
-        <tr>
-            <td>{{ genre.name }}</td>
-            <td>
-                <a href="/genre/edit/{{ genre.id }}">🖉 Редактировать</a>
-                <a href="/genre/delete/{{ genre.id }}">❌ Удалить</a>
-            </td>
-        </tr>
-        {% endfor %}
-        <tbody>
-    </table>
+        {% if (genres)|length==0 %}
+            <p>Список жанров пуст…</p>
+        {% endif %}
 
-    {% if (genres)|length==0 %}
-    <p>Список жанров пуст…</p>
-    {% endif %}
-
-    <p><a href="/genre/add">➕ Добавить жанр…</a></p>
-</div>
+        <p><a href="/genre/add">➕ Добавить жанр…</a></p>
+    </div>
 
 {% endblock %}
+
+{% macro genSortUrl(context, sort_name, sort_type, link_name) %}
+    {% if context.sort_params[sort_name] != sort_type %}
+        {% if context.search_query is not null %}
+            <a href="/?search_query={{ context.search_query }}&{{ sort_name }}={{ sort_type }}">{{ link_name }}</a>
+        {% else %}
+            <a href="/?{{ sort_name }}={{ sort_type }}">{{ link_name }}</a>
+        {% endif %}
+    {% else %}
+        {{ link_name }}
+    {% endif %}
+{% endmacro %}
+
+{% macro printRating(rating) %}
+    {% if rating >= 1 %}
+        ★ {{ rating|number_format(1, ',', '') }}
+    {% else %}
+        —
+    {% endif %}
+{% endmacro %}

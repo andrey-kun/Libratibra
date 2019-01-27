@@ -146,4 +146,23 @@ abstract class Model
         }
         return substr($set, 0, -2);
     }
+
+    protected static function getTypeNameSorted(string $sort_name)
+    {
+        return substr($sort_name, 0, strrpos($sort_name, '_'));
+    }
+
+    protected static function getSortDirection(string $sort_name)
+    {
+        return substr(strrchr($sort_name, "_"), 1);
+    }
+
+    public static function arraySort(&$models, $sort_name, $callback_func = null)
+    {
+        uasort($models, $callback_func);
+
+        if (static::getSortDirection($sort_name) === "descending") {
+            $models = array_reverse($models, true);
+        }
+    }
 }

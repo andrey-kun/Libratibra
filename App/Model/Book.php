@@ -9,21 +9,13 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\SortCallback;
+
 class Book extends Content
 {
     public $author_id;
     public $genre_id;
     public $rating;
-
-    protected static function getRowNames()
-    {
-        return ['id', 'name', 'rating', 'author_id', 'genre_id'];
-    }
-
-    protected static function getTableName()
-    {
-        return "books";
-    }
 
     public static function insert($values): object
     {
@@ -36,15 +28,6 @@ class Book extends Content
         return $book;
     }
 
-    public function remove()
-    {
-        $book_author = Author::getById($this->author_id);
-
-        parent::remove();
-
-        if ($book_author !== null) $book_author->update(null);
-    }
-
     public static function getByAuthor($author_id)
     {
         return parent::getByColumn('author_id', $author_id);
@@ -53,6 +36,54 @@ class Book extends Content
     public static function getByGenre($genre_id)
     {
         return parent::getByColumn('genre_id', $genre_id);
+    }
+
+    public static function arraySort(&$models, $sort_name, $callback_func = null, $authors = null, $genres = null)
+    {
+        if ($callback_func !== null) {
+            parent::arraySort($models, $sort_name, $callback_func);
+            return;
+        }
+
+        switch (static::getTypeNameSorted($sort_name)) {
+            default:
+            case "book_name":
+                $callback_func = SortCallback::getFuncSortByField("name");
+                break;
+            case "book_rating":
+                $callback_func = SortCallback::getFuncSortByField("rating");
+                break;
+            case "author_name":
+                $callback_func = SortCallback::getFuncSortByFieldInArray($authors, "author_id", "name");
+                break;
+            case "author_rating":
+                $callback_func = SortCallback::getFuncSortByFieldInArray($authors, "author_id", "rating");
+                break;
+            case "genre_name":
+                $callback_func = SortCallback::getFuncSortByFieldInArray($genres, "genre_id", "name");
+                break;
+        }
+
+        parent::arraySort($models, $sort_name, $callback_func);
+    }
+
+    protected static function getRowNames()
+    {
+        return ['id', 'name', 'rating', 'author_id', 'genre_id'];
+    }
+
+    protected static function getTableName()
+    {
+        return "books";
+    }
+
+    public function remove()
+    {
+        $book_author = Author::getById($this->author_id);
+
+        parent::remove();
+
+        if ($book_author !== null) $book_author->update(null);
     }
 
     public function update($values)
