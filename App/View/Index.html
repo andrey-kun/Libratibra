@@ -23,7 +23,10 @@
 
     <div class="content">
         {% if search_query is not null %}
-            <p>Результаты поиска по запросу «{{ search_query }}»</p>
+            <p>
+                Результаты поиска по запросу «{{ search_query }}»
+                <a href="/">Сброс</a>
+            </p>
         {% endif %}
         <table>
             <thead>
